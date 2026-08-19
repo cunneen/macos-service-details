@@ -1,13 +1,4 @@
-<!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
 <a id="readme-top"></a>
-<!--
-*** Thanks for checking out the Best-README-Template. If you have a suggestion
-*** that would make this better, please fork the repo and create a pull request
-*** or simply open an issue with the tag "enhancement".
-*** Don't forget to give the project a star!
-*** Thanks again! Now go create something AMAZING! :D
--->
-
 
 
 <!-- PROJECT SHIELDS -->
@@ -22,7 +13,7 @@
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
-[![ISC][license-shield]][license-url]
+[![MPL-2.0][license-shield]][license-url]
 [![LinkedIn][linkedin-shield]][linkedin-url]
 
 
@@ -85,7 +76,7 @@
 
 [![Product Name Screen Shot][product-screenshot]](https://example.com)
 
-Here's a blank template to get started. To avoid retyping too much info, do a search and replace with your text editor for the following: `cunneen`, `macos-service-details`, ``, `linkedin_username`, `email_client`, `email`, `macos-service-details`, `GUI for viewing MacOS service details`, `ISC`
+Here's a blank template to get started. To avoid retyping too much info, do a search and replace with your text editor for the following: `cunneen`, `macos-service-details`, ``, `linkedin_username`, `email_client`, `email`, `macos-service-details`, `GUI for viewing MacOS service details`, `MPL-2.0`
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -197,7 +188,7 @@ Don't forget to give the project a star! Thanks again!
 <!-- LICENSE -->
 ## License
 
-Distributed under the ISC. See `LICENSE.txt` for more information.
+Distributed under the MPL-2.0 License. See `LICENSE.txt` for more information.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -236,7 +227,7 @@ Project Link: [https://github.com/cunneen/macos-service-details](https://github.
 [issues-shield]: https://img.shields.io/github/issues/cunneen/macos-service-details.svg?style=for-the-badge
 [issues-url]: https://github.com/cunneen/macos-service-details/issues
 [license-shield]: https://img.shields.io/github/license/cunneen/macos-service-details.svg?style=for-the-badge
-[license-url]: https://github.com/cunneen/macos-service-details/blob/master/LICENSE.txt
+[license-url]: https://github.com/cunneen/macos-service-details/blob/master/LICENSE.md
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/linkedin_username
 [product-screenshot]: images/screenshot.png

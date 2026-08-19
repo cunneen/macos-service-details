@@ -9,7 +9,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "license": "ISC",
+  "license": "MPL-2.0",
   "devDependencies": {
     "@commitlint/cli": "^21.2.2",
     "@commitlint/config-conventional": "^21.2.2",
