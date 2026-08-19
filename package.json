@@ -26,5 +26,8 @@
     "commitlint": "commitlint --edit",
     "release-changelog": "git-cliff --unreleased --prepend CHANGELOG.md --tag ",
     "release": "dotenvx run release-it -- -i -u"
+  },
+  "dependencies": {
+    "@vscode/sudo-prompt": "^9.3.2"
   }
 }
