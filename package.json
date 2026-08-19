@@ -1,0 +1,30 @@
+{
+  "name": "macos-service-details",
+  "description": "GUI for viewing MacOS service details",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "index.js",
+  "author": "Mike Cunneen",
+  "private": "false",
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "ISC",
+  "devDependencies": {
+    "@commitlint/cli": "^21.2.2",
+    "@commitlint/config-conventional": "^21.2.2",
+    "@dotenvx/dotenvx": "^2.21.0",
+    "chai": "^6.2.2",
+    "git-cliff": "^2.13.1",
+    "husky": "^9.1.7",
+    "mocha": "^11.8.0",
+    "release-it": "^21.0.2"
+  },
+  "scripts": {
+    "test": "dotenvx run -- ./node_modules/.bin/mocha",
+    "prepare": "husky",
+    "commitlint": "commitlint --edit",
+    "release-changelog": "git-cliff --unreleased --prepend CHANGELOG.md --tag ",
+    "release": "dotenvx run release-it -- -i -u"
+  }
+}
