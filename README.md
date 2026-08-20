@@ -271,6 +271,7 @@ These applications are genuinely useful, and have inspired various aspects:
 
 <!-- Other links -->
 
+[Applite]: https://github.com/milanvarady/Applite
 [Cork]: https://github.com/buresdv/Cork
 [LaunchControl]: http://www.soma-zone.com
 [Lingon Pro]: https://www.peterborgapps.com/lingon/
