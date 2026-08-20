@@ -1,6 +1,6 @@
 <a id="readme-top"></a>
 
-<span style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+<div align="center" style="box-sizing: border-box;">
 
 <span style="">_"The only tool you'll need in order to manage your Mac"_</span>
 
@@ -20,16 +20,13 @@
 [![Issues][issues-shield]][issues-url]
 [![MPL-2.0][license-shield]][license-url]
 
-</span>
+</div>
 
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
   <a href="https://github.com/cunneen/macos-service-details">
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="80" height="80" fill="currentColor">
-    <title>Apple Logo</title>
-    <path d="M98 68c0 19 16 25 17 25-1 0-3 9-9 18-5 7-11 15-19 15s-11-5-21-5c-9 0-12 5-20 5s-14-8-20-16C16 95 8 67 19 48q9-15 25-16c8 0 16 6 21 6s14-7 24-6c4 0 15 2 22 12 0 1-13 8-13 24M82 22q8-9 7-20-11 1-19 9-7 8-6 20 11-1 18-9"/>
-  </svg>
+  <img src="./public/apple.svg" height="80" width="80" alt="macOS"  />
   </a>
 <h3 align="center">macos-service-details</h3>
 
@@ -255,7 +252,6 @@ These applications are genuinely useful, and have inspired various aspects:
 [issues-url]: https://github.com/cunneen/macos-service-details/issues
 [license-shield]: https://img.shields.io/github/license/cunneen/macos-service-details.svg?style=for-the-badge
 [license-url]: https://github.com/cunneen/macos-service-details/blob/master/LICENSE.md
-[product-screenshot]: images/screenshot.png
 
 <!-- Shields.io badges. You can a comprehensive list with many more badges at: https://github.com/inttter/md-badges -->
 
@@ -283,5 +279,6 @@ These applications are genuinely useful, and have inspired various aspects:
 [Sloth]: https://github.com/sveinbjornt/Sloth
 
 <!-- images -->
-
+[apple]: ./public/apple.svg "Apple Logo"
 [error]: ./public/error.svg "Warning"
+[product-screenshot]: ./public/comingsoon.svg "coming soon"
