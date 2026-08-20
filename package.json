@@ -14,20 +14,20 @@
     "@commitlint/cli": "^21.2.2",
     "@commitlint/config-conventional": "^21.2.2",
     "@dotenvx/dotenvx": "^2.21.0",
-    "@types/chai": "^5.2.3",
-    "@types/mocha": "^10.0.10",
     "@types/node": "^24.13.3",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.4",
+    "@vitest/coverage-v8": "^4.1.11",
     "chai": "^6.2.2",
     "git-cliff": "^2.13.1",
     "husky": "^9.1.7",
-    "mocha": "^12.0.0-beta-2",
     "oxlint": "^1.75.0",
     "release-it": "^21.0.2",
+    "ts-node": "^10.9.2",
     "typescript": "~6.0.2",
-    "vite": "^8.2.0"
+    "vite": "^8.2.0",
+    "vitest": "^4.1.11"
   },
   "scripts": {
     "build": "tsc -b && vite build",
@@ -38,7 +38,8 @@
     "preview": "vite preview",
     "release-changelog": "git-cliff --unreleased --prepend CHANGELOG.md --tag ",
     "release": "dotenvx run release-it -- -i -u",
-    "test": "dotenvx run -- ./node_modules/.bin/mocha"
+    "test": "dotenvx run -- ./node_modules/.bin/vitest",
+    "test-nomock": "dotenvx run -e 'DISABLE_MOCK_SUDO=true' -- ./node_modules/.bin/vitest"
   },
   "dependencies": {
     "@vscode/sudo-prompt": "^9.3.2",

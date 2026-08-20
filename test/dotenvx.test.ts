@@ -1,4 +1,4 @@
-  import { assert } from "chai";
+  import { assert, describe, it } from "vitest";
 
   describe("dotenvx", () => {
     it("should decrypt process.env.HELLO value", () => {
