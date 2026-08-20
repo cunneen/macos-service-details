@@ -5,8 +5,7 @@
     <style>/* <![CDATA[ */
       :root {
         --dark-color: #222222;
-        --light-color: #dddddd;
-        --light-color: var(--fgColor-accent);
+        --light-color: var(--fgColor-accent,#dddddd);
       }
 
       .applelogo {
