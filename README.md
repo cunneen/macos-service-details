@@ -1,5 +1,8 @@
 <a id="readme-top"></a>
 
+<span style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+
+<span style="">_"The only tool you'll need in order to manage your Mac"_</span>
 
 <!-- PROJECT SHIELDS -->
 <!--
@@ -9,22 +12,25 @@
 *** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
 *** https://www.markdownguide.org/basic-syntax/#reference-style-links
 -->
+
+
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
 [![MPL-2.0][license-shield]][license-url]
-[![LinkedIn][linkedin-shield]][linkedin-url]
 
-
+</span>
 
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
   <a href="https://github.com/cunneen/macos-service-details">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="80" height="80" fill="currentColor">
+    <title>Apple Logo</title>
+    <path d="M98 68c0 19 16 25 17 25-1 0-3 9-9 18-5 7-11 15-19 15s-11-5-21-5c-9 0-12 5-20 5s-14-8-20-16C16 95 8 67 19 48q9-15 25-16c8 0 16 6 21 6s14-7 24-6c4 0 15 2 22 12 0 1-13 8-13 24M82 22q8-9 7-20-11 1-19 9-7 8-6 20 11-1 18-9"/>
+  </svg>
   </a>
-
 <h3 align="center">macos-service-details</h3>
 
   <p align="center">
@@ -40,8 +46,6 @@
     <a href="https://github.com/cunneen/macos-service-details/issues/new?labels=enhancement&template=feature-request---.md">Request Feature</a>
   </p>
 </div>
-
-
 
 <!-- TABLE OF CONTENTS -->
 <details>
@@ -64,104 +68,133 @@
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
     <li><a href="#acknowledgments">Acknowledgments</a></li>
   </ol>
 </details>
 
-
-
 <!-- ABOUT THE PROJECT -->
+
 ## About The Project
 
 [![Product Name Screen Shot][product-screenshot]](https://example.com)
 
-Here's a blank template to get started. To avoid retyping too much info, do a search and replace with your text editor for the following: `cunneen`, `macos-service-details`, ``, `linkedin_username`, `email_client`, `email`, `macos-service-details`, `GUI for viewing MacOS service details`, `MPL-2.0`
+A GUI to explore MacOS processes and their configuration; largely a front-end for the built-in MacOS
+`sfltool`.
+
+| ![error] | _This is a work-in-progress. Not yet ready for use._ |
+|----------|------------------------------------------------------|
+
+### Background
+
+The motivation arose when I was troubleshooting an issue on my Mac caused by an errant 3rd-party application.
+
+The application tended to corrupt the network stack, leaving my computer largely inoperable. Worse still, uninstalling
+the application didn't solve the problem: the application had installed a kernel network
+extension, and a persistent service which kept re-corrupting the network config.
+
+Trying to figure this all out, and then fix it, was a nightmare. It turns out there are so many places and applications on a Mac where
+the configuration for such items reside:
+
+- `launchctl`
+- `configd` (`scutil`)
+- Shared-File Lists (`sfltool`)
+- `homebrew`
+- `/etc/`
+- `ifconfig` , `route`
+- ...
+
+The goal of this project is to (eventually) be:
+
+| _"The only tool you need in order to manage your Mac"_ |
+|--------------------------------------------------------|
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
 
 ### Built With
 
-* [![Next][Next.js]][Next-url]
-* [![React][React.js]][React-url]
-* [![Vue][Vue.js]][Vue-url]
-* [![Angular][Angular.io]][Angular-url]
-* [![Svelte][Svelte.dev]][Svelte-url]
-* [![Laravel][Laravel.com]][Laravel-url]
-* [![Bootstrap][Bootstrap.com]][Bootstrap-url]
-* [![JQuery][JQuery.com]][JQuery-url]
+- ![macOS]
+- ![Node.js]
+- ![npm]
+- ![React.js]
+- ![Tauri]
+- ![Vite]
+- ![Vitest]
+- ![Visual Studio Code]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
-
 <!-- GETTING STARTED -->
+
 ## Getting Started
 
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
-
-### Prerequisites
-
-This is an example of how to list things you need to use the software and how to install them.
-* npm
-  ```sh
-  npm install npm@latest -g
-  ```
-
-### Installation
-
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
+1. Clone the repo
    ```sh
    git clone https://github.com/cunneen/macos-service-details.git
    ```
-3. Install NPM packages
+2. Install NPM packages
    ```sh
    npm install
    ```
-4. Enter your API in `config.js`
-   ```js
-   const API_KEY = 'ENTER YOUR API';
-   ```
-5. Change git remote url to avoid accidental pushes to base project
+
+3. Run the app
    ```sh
-   git remote set-url origin cunneen/macos-service-details
-   git remote -v # confirm the changes
+   npm run start
    ```
+
+### In the Future...
+
+In the future you'll be able to install and run the app from the command line, e.g.:
+
+```sh
+npx macos-service-details
+```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
 
 <!-- USAGE EXAMPLES -->
+
 ## Usage
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
+<!-- TODO: add usage examples -->
 
-_For more examples, please refer to the [Documentation](https://example.com)_
+Coming soon...
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
-
 <!-- ROADMAP -->
+
 ## Roadmap
 
-- [ ] Feature 1
-- [ ] Feature 2
-- [ ] Feature 3
-    - [ ] Nested Feature
+- [ ] Nice display of `sfltool dumpbtm` output
+- [ ] UI to backup config
+  - Automatically store incremental backups (optionally)
+- [ ] UI to restore config
+- [ ] UI to remove a configured service
+- [ ] Nice top-level display of active services ( / agents / daemons etc)
+  - as per [Lingon Pro][Lingon Pro] and [LaunchControl][LaunchControl]
+- [ ] Display cross-referenced service config with active services
+- [ ] "Drill-down" into active service details
+  - again, as per [Lingon Pro][Lingon Pro] and [LaunchControl][LaunchControl]
+- [ ] UI to display open files, ports and sockets
+  - as per [Sloth]
+- [ ] UI to display running processes
+  - as per MacOS built-in Activity Monitor
+- [ ] UI to Add / Load / Enable / Disable / Unload / Remove services via `launchctl`
+- [ ] UI to create a new service
+  - write a `plist` to `${HOME}/Library/LaunchAgents` and load it via `launchctl`
+- [ ] Nice display of `configd` state (via `sctool`)
+- [ ] Manipulation of `configd` state (via `sctool`)
+- [ ] UI display of installed packages
+  - as per [Cork][Cork], [Applite][Applite]
+- [ ] UI front-end to install / update / remove Homebrew and App Store packages
+  - as per [Cork][Cork], [Applite][Applite]
 
 See the [open issues](https://github.com/cunneen/macos-service-details/issues) for a full list of proposed features (and known issues).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
-
 <!-- CONTRIBUTING -->
+
 ## Contributing
 
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
@@ -183,41 +216,35 @@ Don't forget to give the project a star! Thanks again!
   <img src="https://contrib.rocks/image?repo=cunneen/macos-service-details" alt="contrib.rocks image" />
 </a>
 
-
-
 <!-- LICENSE -->
+
 ## License
 
-Distributed under the MPL-2.0 License. See `LICENSE.txt` for more information.
+Distributed under the MPL-2.0 License. See `LICENSE.md` for more information.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
-<!-- CONTACT -->
-## Contact
-
-Your Name - [@](https://twitter.com/) - email@email_client.com
-
-Project Link: [https://github.com/cunneen/macos-service-details](https://github.com/cunneen/macos-service-details)
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
 
 <!-- ACKNOWLEDGMENTS -->
+
 ## Acknowledgments
 
-* []()
-* []()
-* []()
+These modules are used directly. Many thanks to the creators and maintainers:
+
+- [@vscode/sudo-prompt]
+- [tinypivot]
+
+These applications are genuinely useful, and have inspired various aspects:
+
+- [Cork]
+- [LaunchControl]
+- [Lingon Pro]
+- [Sloth]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+
 [contributors-shield]: https://img.shields.io/github/contributors/cunneen/macos-service-details.svg?style=for-the-badge
 [contributors-url]: https://github.com/cunneen/macos-service-details/graphs/contributors
 [forks-shield]: https://img.shields.io/github/forks/cunneen/macos-service-details.svg?style=for-the-badge
@@ -228,23 +255,33 @@ Project Link: [https://github.com/cunneen/macos-service-details](https://github.
 [issues-url]: https://github.com/cunneen/macos-service-details/issues
 [license-shield]: https://img.shields.io/github/license/cunneen/macos-service-details.svg?style=for-the-badge
 [license-url]: https://github.com/cunneen/macos-service-details/blob/master/LICENSE.md
-[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
-[linkedin-url]: https://linkedin.com/in/linkedin_username
 [product-screenshot]: images/screenshot.png
+
 <!-- Shields.io badges. You can a comprehensive list with many more badges at: https://github.com/inttter/md-badges -->
-[Next.js]: https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white
-[Next-url]: https://nextjs.org/
+
+[macOS]: https://img.shields.io/badge/macOS-000000?logo=apple&logoColor=F0F0F0 "macOS"
+[Node.js]: https://img.shields.io/badge/Node.js-6DA55F?logo=node.js&logoColor=white "Node.js"
+[npm]: https://img.shields.io/badge/npm-CB3837?logo=npm&logoColor=fff "npm"
 [React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
+[Tauri]: https://img.shields.io/badge/Tauri-24C8D8?logo=tauri&logoColor=fff "Tauri"
+[Vite]: https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=fff "Vite"
+[Vitest]: https://img.shields.io/badge/Vitest-6E9F18?logo=vitest&logoColor=fff "Vitest"
+[Visual Studio Code]: https://custom-icon-badges.demolab.com/badge/Visual%20Studio%20Code-0078d7.svg?logo=visualstudiocode&logoColor=white "Visual Studio Code"
+
+<!-- Acknowledgements links -->
+
+[@vscode/sudo-prompt]: https://github.com/microsoft/vscode-sudo-prompt#readme
+[tinypivot]: https://github.com/Small-Web-Co/tinypivot
+
+<!-- Other links -->
+
+[Cork]: https://github.com/buresdv/Cork
+[LaunchControl]: http://www.soma-zone.com
+[Lingon Pro]: https://www.peterborgapps.com/lingon/
+[nodejs-url]: https://nodejs.org/en/download
 [React-url]: https://reactjs.org/
-[Vue.js]: https://img.shields.io/badge/Vue.js-35495E?style=for-the-badge&logo=vuedotjs&logoColor=4FC08D
-[Vue-url]: https://vuejs.org/
-[Angular.io]: https://img.shields.io/badge/Angular-DD0031?style=for-the-badge&logo=angular&logoColor=white
-[Angular-url]: https://angular.io/
-[Svelte.dev]: https://img.shields.io/badge/Svelte-4A4A55?style=for-the-badge&logo=svelte&logoColor=FF3E00
-[Svelte-url]: https://svelte.dev/
-[Laravel.com]: https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white
-[Laravel-url]: https://laravel.com
-[Bootstrap.com]: https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white
-[Bootstrap-url]: https://getbootstrap.com
-[JQuery.com]: https://img.shields.io/badge/jQuery-0769AD?style=for-the-badge&logo=jquery&logoColor=white
-[JQuery-url]: https://jquery.com 
+[Sloth]: https://github.com/sveinbjornt/Sloth
+
+<!-- images -->
+
+[error]: ./public/error.svg "Warning"
