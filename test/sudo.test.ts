@@ -1,5 +1,8 @@
+import { Logger } from "tslog";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { type SudoCommandParams, sudoCommand } from "../src/util/sudoCommand";
+
+const log = new Logger({ name: "TEST: sudoCommand" });
 
 // set process.env.DISABLE_MOCK_SUDO="true" to test the real API (interactively)
 vi.mock(import("../src/util/sudoCommand"), async (importOriginal) => {
@@ -11,12 +14,12 @@ vi.mock(import("../src/util/sudoCommand"), async (importOriginal) => {
         params: SudoCommandParams,
       ): Promise<string | Buffer<ArrayBufferLike> | undefined> => {
         if (process.env.DISABLE_MOCK_SUDO === "true") {
-          console.log(
+          log.info(
             `=== invoking original sudoCommand(${JSON.stringify(params)}) ===`,
           );
           return originalModule.sudoCommand(params);
         } else {
-          console.log(`=== in mock sudoCommand(${JSON.stringify(params)}) ===`);
+          log.info(`=== in mock sudoCommand(${JSON.stringify(params)}) ===`);
           // mock whenever we receive special values for the "name" param ;
           // if it's not one of the expected values then delegate to
           //  the actual implementation.
@@ -42,11 +45,11 @@ vi.mock(import("../src/util/sudoCommand"), async (importOriginal) => {
 
 beforeEach(() => {
   if (process.env.DISABLE_MOCK_SUDO === "true") {
-    console.log(`=== clearing mocks ===`);
+    log.debug(`=== clearing mocks ===`);
     vi.resetAllMocks();
     vi.clearAllMocks();
   } else {
-    console.log(`process.env.DISABLE_MOCK_SUDO=${process.env.DISABLE_MOCK_SUDO}`);
+    log.info(`process.env.DISABLE_MOCK_SUDO=${process.env.DISABLE_MOCK_SUDO}`);
   }
 });
 afterEach(() => {
@@ -55,7 +58,7 @@ afterEach(() => {
 
 describe("sudoCommand", async () => {
   it("returns 'root' for 'whoami'", async () => {
-    console.log(`===     ... test 1 ===`);
+    log.debug(`===     ... test 1 ===`);
 
     const output = await sudoCommand({
       command: "whoami",
@@ -68,7 +71,7 @@ describe("sudoCommand", async () => {
   });
 
   it("returns 'root' for 'whoami'", async () => {
-    console.log(`===     ... test 2 ===`);
+    log.debug(`===     ... test 2 ===`);
     let errorThrown = false;
     await sudoCommand({
       command: "whoami",

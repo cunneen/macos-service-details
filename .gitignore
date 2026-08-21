@@ -210,3 +210,4 @@ dist-ssr
 *.sln
 *.sw?
 
+test/assets/dumpbtm.txt
