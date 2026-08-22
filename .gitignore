@@ -211,3 +211,4 @@ dist-ssr
 *.sw?
 
 test/assets/dumpbtm.txt
+test/assets/dumpbtm.json

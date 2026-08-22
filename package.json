@@ -45,6 +45,7 @@
   },
   "dependencies": {
     "@vscode/sudo-prompt": "^9.3.2",
+    "chevrotain": "^13.2.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "tslog": "^5.1.0"
