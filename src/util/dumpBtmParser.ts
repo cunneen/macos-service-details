@@ -1,4 +1,9 @@
 import * as chevrotain from "chevrotain";
+// import { Logger, type TLogLevel } from "tslog";
+
+// const logLevel = process.env.TSLOG_LEVEL || process.env.LOG_LEVEL || "INFO";
+// const log = new Logger({ name: "dumpBtmProcessor", minLevel: logLevel as TLogLevel });
+
 
 export const BtmParser = () => {
   // ----------------- Lexer -----------------

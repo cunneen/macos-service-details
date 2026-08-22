@@ -2,9 +2,10 @@ import fs from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { createInterface } from "node:readline/promises";
-import { Logger } from "tslog";
+import { Logger, type TLogLevel } from "tslog";
 
-const log = new Logger({ name: "dumpBtmProcessor" });
+const logLevel = process.env.TSLOG_LEVEL || process.env.LOG_LEVEL || "INFO";
+const log = new Logger({ name: "dumpBtmProcessor", minLevel: logLevel as TLogLevel });
 
 // this is just an enum, but "erasableSyntaxOnly" doesn't let us use enums.
 export type BtmOutputTypePath = "path";
@@ -26,6 +27,7 @@ export type DumpBtmProcessorParams = {
 } & Partial<DumpBtmOutputFilePathOption | DumpBtmOutputWriteStreamOption>;
 
 export const dumpBtmProcessor = async (params: DumpBtmProcessorParams) => {
+
   // read params
   const { inputBtmFilePath, ...outputOptions } = params;
   log.debug(`    params: ${JSON.stringify(params)}`);
@@ -76,7 +78,7 @@ export const dumpBtmProcessor = async (params: DumpBtmProcessorParams) => {
   // in all cases above we have an outputFilePath OR an outputWriteStream defined.
   if (!outputWriteStream && outputFilePath) {
     outputWriteStream = fs.createWriteStream(outputFilePath, "utf-8");
-    log.debug("outputWriteStream: ", outputWriteStream);
+    // log.debug("outputWriteStream: ", outputWriteStream);
   }
 
   // this never triggers, but typescript can't figure that out.

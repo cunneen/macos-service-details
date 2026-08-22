@@ -1,8 +1,10 @@
-import { Logger } from "tslog";
+import { Logger, type TLogLevel } from "tslog";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { type SudoCommandParams, sudoCommand } from "../src/util/sudoCommand";
 
-const log = new Logger({ name: "TEST: sudoCommand" });
+const logLevel = process.env.TSLOG_LEVEL || process.env.LOG_LEVEL || "INFO";
+const log = new Logger({ name: "TEST: sudoCommand", minLevel: logLevel as TLogLevel });
+
 
 // set process.env.DISABLE_MOCK_SUDO="true" to test the real API (interactively)
 vi.mock(import("../src/util/sudoCommand"), async (importOriginal) => {

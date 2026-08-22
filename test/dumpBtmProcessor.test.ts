@@ -1,12 +1,13 @@
 import path from "node:path";
-import { Logger } from "tslog";
-import { test, vi } from "vitest";
+import { Logger, type TLogLevel } from "tslog";
+import { test } from "vitest";
 import {
   type DumpBtmProcessorParams,
   dumpBtmProcessor,
 } from "../src/util/dumpbtmProcessor";
 
-const log = new Logger({ name: "TEST: dumpBtmProcessor" });
+const logLevel = process.env.TSLOG_LEVEL || process.env.LOG_LEVEL || "INFO";
+const log = new Logger({ name: "TEST: dumpBtmProcessor", minLevel: logLevel as TLogLevel });
 
 test("dumpBtmProcessor", async () => {
   try {

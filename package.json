@@ -39,7 +39,8 @@
     "preview": "vite preview",
     "release-changelog": "git-cliff --unreleased --prepend CHANGELOG.md --tag ",
     "release": "dotenvx run release-it -- -i -u",
-    "test": "dotenvx run -e 'TSLOG_LEVEL=DEBUG' -- ./node_modules/.bin/vitest",
+    "test": "dotenvx run -e 'TSLOG_LEVEL=INFO' -- ./node_modules/.bin/vitest",
+    "test-debug": "dotenvx run -e 'TSLOG_LEVEL=DEBUG' -- ./node_modules/.bin/vitest",
     "test-nomock": "dotenvx run -e 'DISABLE_MOCK_SUDO=true TSLOG_LEVEL=DEBUG' -- ./node_modules/.bin/vitest",
     "create-dumpbtm": "sudo sfltool dumpbtm > ./test/assets/dumpbtm.txt"
   },
