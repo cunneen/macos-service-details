@@ -1,11 +1,13 @@
 import * as chevrotain from "chevrotain";
-// import { Logger, type TLogLevel } from "tslog";
+import { Logger } from "tslog";
 
-// const logLevel = process.env.TSLOG_LEVEL || process.env.LOG_LEVEL || "INFO";
-// const log = new Logger({ name: "dumpBtmProcessor", minLevel: logLevel as TLogLevel });
+const log = Logger.fromEnv({ name: "dumpBtmProcessor" });
 
-
-export const BtmParser = () => {
+/**
+ * Tokenizes and parses a dumpbtm.txt file into a JSON object
+ * @returns
+ */
+export const BtmToJsonConverter = () => {
   // ----------------- Lexer -----------------
   const createToken = chevrotain.createToken;
   const Lexer = chevrotain.Lexer;
@@ -25,15 +27,14 @@ export const BtmParser = () => {
 
   const TOK: { [key: string]: chevrotain.TokenType } = {};
 
+  // automatically create a named token for each pattern we've defined
   for (const [patName, pat] of Object.entries(patterns)) {
     //TODO: currently this only understands individual patterns. Need to add: group (e.g. Lexer.SKIPPED)
-    if (pat instanceof RegExp) {
       TOK[patName] = createToken({
         name: patName,
         pattern: pat,
       });
       TOK[patName].LABEL = pat.toString();
-    }
   }
 
   //  const WhiteSpace = createToken({
@@ -62,34 +63,39 @@ export const BtmParser = () => {
   // ----------------- parser -----------------
   const EmbeddedActionsParser = chevrotain.EmbeddedActionsParser;
 
+  /**
+   * A parser for the output of `sfltool dumpbtm`.
+   */
+  // TODO: convert this to a concrete syntax tree parser, separating the actions from the grammar
+  //   as per https://chevrotain.io/docs/guide/concrete_syntax_tree.html#enabling
   class BtmFileParser extends EmbeddedActionsParser {
-
-    startRule: chevrotain.ParserMethod<[], { [key: string]: unknown; }[]>;
+    /**
+     * References the start rule of the grammar i.e. the entry point of the parser
+     */
+    startRule: chevrotain.ParserMethod<[], { [key: string]: unknown }[]>;
 
     constructor() {
       super(btmFileTokens, { recoveryEnabled: true });
 
       type PatternName = keyof typeof patterns;
       type BtmParserType = BtmFileParser & {
-        [patName in Lowercase<PatternName>]: any;
+        [patName in Lowercase<PatternName>]: chevrotain.ParserMethod<[], string[]>;
       } & {
-        [key in
-          | "records_state_group"
-          | "record_group"
-          | "items_group"
-          | "records_heading_group"
-          | "items_heading_group"
-          | "record_state_line"
-          | "blank_line"
-          | "item"]: any;
-      } 
-      const $ = this as BtmParserType;
+        records_state_group: chevrotain.ParserMethod<[], string[]>;
+        record_group: chevrotain.ParserMethod<[], { [key: string]: unknown; }>;
+        items_group: chevrotain.ParserMethod<[], string[]>;
+        records_heading_group: chevrotain.ParserMethod<[], string[]>;
+        items_heading_group: chevrotain.ParserMethod<[], string[]>;
+        record_state_line: chevrotain.ParserMethod<[], string[]>;
+        blank_line: chevrotain.ParserMethod<[], string[]>;
+        item: chevrotain.ParserMethod<[], string[]>;
+      };
+      const $ = this as unknown as BtmParserType;
 
-      for (const [patName, pat] of Object.entries(patterns)) {
+      // automatically create a rule for each pattern/token, named
+      //   with the same name as the pattern name (lowercased)
+      for (const [patName, _pat] of Object.entries(patterns)) {
         //TODO: currently this only understands individual patterns. Need to add: group (e.g. Lexer.SKIPPED)
-        if (pat instanceof RegExp) {
-          //TOK[patName] = createToken({ name: patName, pattern: pat });
-          //TOK[patName].LABEL = patName
           $.RULE(`${patName}`.toLowerCase(), () => {
             const lit = $.CONSUME(TOK[patName]);
             if (/:/.test(lit.image)) {
@@ -99,7 +105,6 @@ export const BtmParser = () => {
               return [patName, lit.image];
             }
           });
-        }
       }
       $.RULE("records_state_group", () => {
         const stateLines = [];
@@ -112,14 +117,17 @@ export const BtmParser = () => {
       $.RULE("records_heading_group", () => {
         $.SUBRULE1($.records_header_line);
         const header = $.SUBRULE($.records_header);
+        log.debug(`in records_heading_group: header:`, header);
+
         $.SUBRULE2($.records_header_line);
         $.SUBRULE1($.blank_line);
-        return Object.fromEntries([header as [string, string]]);
+        log.debug(`in records_heading_group: returning:`, header);
+        return header;
       });
       $.RULE("item", () => {
         $.SUBRULE($.item_number);
         const items = [] as [string, string][];
-        $.MANY1(() => items.push($.SUBRULE($.item_key_value)));
+        $.MANY1(() => items.push($.SUBRULE($.item_key_value) as [string,string]));
         $.OPTION(() => {
           $.SUBRULE($.embedded_item_identifiers);
           $.MANY2(() => $.SUBRULE($.embedded_item_number));
@@ -146,8 +154,14 @@ export const BtmParser = () => {
           string,
           string,
         ];
-        recGroup.UID = String(headingLine[0]).split("UID ")[1];
-        recGroup.GUID = headingLine[1];
+        $.ACTION(() => {
+          log.debug(`in record_group: headingLine: ${headingLine}`);
+          recGroup.UID = String(headingLine[0]).split("UID ")[1];
+          recGroup.GUID = headingLine[1];
+          log.debug(
+            `in record_group: UID: ${recGroup.UID}, GUID: ${recGroup.GUID}`,
+          );
+        });
         recGroup.state = $.SUBRULE($.records_state_group);
         recGroup.items = $.SUBRULE($.items_group);
         this.SUBRULE($.blank_line);

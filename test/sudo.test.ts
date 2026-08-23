@@ -1,9 +1,8 @@
-import { Logger, type TLogLevel } from "tslog";
+import { Logger } from "tslog";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { type SudoCommandParams, sudoCommand } from "../src/util/sudoCommand";
 
-const logLevel = process.env.TSLOG_LEVEL || process.env.LOG_LEVEL || "INFO";
-const log = new Logger({ name: "TEST: sudoCommand", minLevel: logLevel as TLogLevel });
+const log = Logger.fromEnv({ name: "TEST: sudoCommand"});
 
 
 // set process.env.DISABLE_MOCK_SUDO="true" to test the real API (interactively)
@@ -16,12 +15,12 @@ vi.mock(import("../src/util/sudoCommand"), async (importOriginal) => {
         params: SudoCommandParams,
       ): Promise<string | Buffer<ArrayBufferLike> | undefined> => {
         if (process.env.DISABLE_MOCK_SUDO === "true") {
-          log.info(
+          log.debug(
             `=== invoking original sudoCommand(${JSON.stringify(params)}) ===`,
           );
           return originalModule.sudoCommand(params);
         } else {
-          log.info(`=== in mock sudoCommand(${JSON.stringify(params)}) ===`);
+          log.debug(`=== in mock sudoCommand(${JSON.stringify(params)}) ===`);
           // mock whenever we receive special values for the "name" param ;
           // if it's not one of the expected values then delegate to
           //  the actual implementation.
@@ -51,7 +50,7 @@ beforeEach(() => {
     vi.resetAllMocks();
     vi.clearAllMocks();
   } else {
-    log.info(`process.env.DISABLE_MOCK_SUDO=${process.env.DISABLE_MOCK_SUDO}`);
+    log.warn(`Using Mocks to test sudo, because process.env.DISABLE_MOCK_SUDO=${process.env.DISABLE_MOCK_SUDO}`);
   }
 });
 afterEach(() => {

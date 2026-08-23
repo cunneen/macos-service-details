@@ -2,10 +2,9 @@ import fs from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { createInterface } from "node:readline/promises";
-import { Logger, type TLogLevel } from "tslog";
+import { Logger } from "tslog";
 
-const logLevel = process.env.TSLOG_LEVEL || process.env.LOG_LEVEL || "INFO";
-const log = new Logger({ name: "dumpBtmProcessor", minLevel: logLevel as TLogLevel });
+const log = Logger.fromEnv({ name: "dumpBtmProcessor"});
 
 // this is just an enum, but "erasableSyntaxOnly" doesn't let us use enums.
 export type BtmOutputTypePath = "path";

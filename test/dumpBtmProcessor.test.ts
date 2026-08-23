@@ -1,18 +1,35 @@
+import fs from "node:fs/promises";
 import path from "node:path";
-import { Logger, type TLogLevel } from "tslog";
+import { Logger } from "tslog";
 import { test } from "vitest";
 import {
   type DumpBtmProcessorParams,
   dumpBtmProcessor,
 } from "../src/util/dumpbtmProcessor";
 
-const logLevel = process.env.TSLOG_LEVEL || process.env.LOG_LEVEL || "INFO";
-const log = new Logger({ name: "TEST: dumpBtmProcessor", minLevel: logLevel as TLogLevel });
+const log = Logger.fromEnv({ name: "TEST: dumpBtmProcessor"});
 
-test("dumpBtmProcessor", async () => {
+const DUMPBTM_OUTPUT_FILE_PATH = path.join(__dirname, "assets", "dumpbtm.txt");
+
+// ensure dumpbtm.txt exists
+test.beforeAll(async () => {
+  const stat = await fs
+    .stat(DUMPBTM_OUTPUT_FILE_PATH)
+    .catch((_e) => {
+      throw new Error(
+        "dumpbtm.txt is not a file. Run 'npm run dumpbtm' to create it.",
+      );
+    });
+
+  if (!stat.isFile()) {
+    test.skip("dumpbtm.txt is not a file. Run 'npm run dumpbtm' to create it.");
+  }
+});
+
+test("BtmToJsonConverter", async () => {
   try {
     const params: DumpBtmProcessorParams = {
-      inputBtmFilePath: path.join(__dirname, "assets", "dumpbtm.txt")
+      inputBtmFilePath: DUMPBTM_OUTPUT_FILE_PATH
     };
     await dumpBtmProcessor(params);
   } catch (error) {
