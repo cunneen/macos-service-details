@@ -18,7 +18,8 @@ const log = {
 function App() {
   log.debug(`rendering ${new Date()}`);
   const callRustHandler = useCallback(async () => {
-    await invoke("my_custom_command", {params: { foo: "bar" }});
+    const response = await invoke("my_custom_command", { foo: "bar" });
+    log.info(`callRustHandler response: ${response}`);
   }, []);
   const logMessageHandler = useCallback(() => {
     log.info("logMessageHandler");
