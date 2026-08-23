@@ -26,6 +26,7 @@
     "oxlint": "^1.75.0",
     "release-it": "^21.0.2",
     "ts-node": "^10.9.2",
+    "tslog": "^5.1.0",
     "typescript": "~6.0.2",
     "vite": "^8.2.0",
     "vitest": "^4.1.11"
@@ -34,21 +35,23 @@
     "build": "tsc -b && vite build",
     "commitlint": "commitlint --edit",
     "dev": "vite",
+    "dev-tauri": "tauri dev",
     "lint": "oxlint",
     "prepare": "husky",
     "preview": "vite preview",
     "release-changelog": "git-cliff --unreleased --prepend CHANGELOG.md --tag ",
     "release": "dotenvx run release-it -- -i -u",
+    "tauri": "tauri",
     "test": "dotenvx run -e 'TSLOG_LEVEL=INFO' -- ./node_modules/.bin/vitest",
     "test-debug": "dotenvx run -e 'TSLOG_LEVEL=DEBUG' -- ./node_modules/.bin/vitest",
     "test-nomock": "dotenvx run -e 'DISABLE_MOCK_SUDO=true TSLOG_LEVEL=DEBUG' -- ./node_modules/.bin/vitest",
     "create-dumpbtm": "sudo sfltool dumpbtm > ./test/assets/dumpbtm.txt"
   },
   "dependencies": {
+    "@tauri-apps/plugin-log": "^2.9.0",
     "@vscode/sudo-prompt": "^9.3.2",
     "chevrotain": "^13.2.0",
     "react": "^19.2.8",
-    "react-dom": "^19.2.8",
-    "tslog": "^5.1.0"
+    "react-dom": "^19.2.8"
   }
 }

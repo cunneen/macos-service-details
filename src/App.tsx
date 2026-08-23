@@ -1,129 +1,69 @@
-import { useState } from "react";
-import heroImg from "./assets/hero.png";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "./assets/vite.svg";
+// When using the Tauri API npm package:
+import { invoke } from "@tauri-apps/api/core";
+import { debug, error, info, trace, warn } from "@tauri-apps/plugin-log";
+import { useCallback } from "react";
 import "./App.css";
 
+// ... so it looks like we can't use sudoCommand (or anything that uses node internals e.g. process, os etc)
+// import { sudoCommand } from "./util/sudoCommand";
+
+const log = {
+  debug,
+  error,
+  info,
+  trace,
+  warn,
+};
+
 function App() {
-  const [count, setCount] = useState(0);
-
+  log.debug(`rendering ${new Date()}`);
+  const callRustHandler = useCallback(async () => {
+    await invoke("my_custom_command", {params: { foo: "bar" }});
+  }, []);
+  const logMessageHandler = useCallback(() => {
+    log.info("logMessageHandler");
+  }, []);
+  // // can't use sudoCommand in tauri
+  // const sudoCommandHandler = useCallback(async () => {
+  //   const sudoResult = await sudoCommand({
+  //     command: `echo "hey \${LOGNAME} won't you take me to a funky town?"`,
+  //     name: "Auth required",
+  //     icns: "/System/Library/CoreServices/CoreTypes.bundle/Contents/Resources/AlertNoteIcon.icns",
+  //   });
+  //   log.info(`sudoEchoHandler: ${sudoResult}`);
+  // }, []);
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank" rel="noopener">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank" rel="noopener">
-                <img className="button-icon" src={reactLogo} alt="react logo" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a
-                href="https://github.com/vitejs/vite"
-                target="_blank"
-                rel="noopener"
-              >
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank" rel="noopener">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank" rel="noopener">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a
-                href="https://bsky.app/profile/vite.dev"
-                target="_blank"
-                rel="noopener"
-              >
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+    <section id="center">
+      <div>
+        <h1>Get started</h1>
+        <p>Push the button</p>
+      </div>
+      <button
+        id="callRust"
+        type="button"
+        className="counter"
+        onClick={callRustHandler}
+      >
+        Call Rust
+      </button>
+      <button
+        id="logMessage"
+        type="button"
+        className="counter"
+        onClick={logMessageHandler}
+      >
+        Log Message with Logger
+      </button>
+      {/* can't use sudoCommand in tauri */}
+      {/* <button
+        id="sudoCommand"
+        type="button"
+        className="counter"
+        onClick={sudoCommandHandler}
+      >
+        Won't you take me to...
+      </button> */}
+    </section>
   );
 }
 
