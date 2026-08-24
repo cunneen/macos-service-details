@@ -24,7 +24,9 @@
           "dir": "../dist-isolation"
         }
       }
-    }
+    },
+    "withGlobalTauri": true
+
   },
   "bundle": {
     "active": true,

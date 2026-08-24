@@ -1,0 +1,7 @@
+[[set]]
+identifier = "allow-log"
+description = """ Allows the log command.
+"""
+permissions = [
+    "allow-log"
+]

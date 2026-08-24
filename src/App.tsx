@@ -1,55 +1,57 @@
-import { useState } from "preact/hooks";
-import preactLogo from "./assets/preact.svg";
-import { invoke } from "@tauri-apps/api/core";
+import * as log from "@tauri-apps/plugin-log";
+import { Command } from "@tauri-apps/plugin-shell";
+import { useCallback, useState } from "preact/hooks";
 import "./App.css";
+import { BtmToJsonConverter, setLogger } from "./util/BtmToJsonConverter";
 
-import { warn, debug, trace, info, error } from '@tauri-apps/plugin-log';
-
-trace('Trace');
-info('Info');
-error('Error');
+// set the logger on the BtmToJsonConverter
+setLogger(log);
+// show log messages in the webview console
+log.attachConsole();
 
 function App() {
-  const [greetMsg, setGreetMsg] = useState("");
-  const [name, setName] = useState("");
+  const [_dumpBtmRaw, setDumpBtmRaw] = useState("");
+  const [_dumpBtmParsed, setDumpBtmParsed] = useState<object | undefined>();
+  const [state, setState] = useState("Run Commands");
 
-  async function greet() {
-    // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-    setGreetMsg(await invoke("greet", { name }));
-  }
+  const dumpBtm = useCallback(async (_e: MouseEvent) => {
+    setState("loading");
+    const result = await Command.create("dumpbtm", [
+      "sfltool",
+      "dumpbtm",
+    ]).execute();
+    // const result = await Command.create("sudo", [
+    //   "whoami",
+    // ]).execute();
+
+    setState("verifying");
+
+    if (result?.stdout?.length > 0) {
+      setDumpBtmRaw(result.stdout);
+      const converter = BtmToJsonConverter();
+      const json = converter.toJson(result.stdout);
+      setDumpBtmParsed(json);
+      setState("Success!");
+    } else {
+      setState("Error!");
+    }
+  }, []);
 
   return (
     <main class="container">
-      <h1>Welcome to Tauri + Preact</h1>
+      <h1>{state}</h1>
 
-      <div class="row">
-        <a href="https://vite.dev" target="_blank">
-          <img src="/vite.svg" class="logo vite" alt="Vite logo" />
-        </a>
-        <a href="https://tauri.app" target="_blank">
-          <img src="/tauri.svg" class="logo tauri" alt="Tauri logo" />
-        </a>
-        <a href="https://preactjs.com" target="_blank">
-          <img src={preactLogo} class="logo preact" alt="Preact logo" />
-        </a>
-      </div>
-      <p>Click on the Tauri, Vite, and Preact logos to learn more.</p>
-
-      <form
-        class="row"
-        onSubmit={(e) => {
-          e.preventDefault();
-          greet();
-        }}
-      >
-        <input
-          id="greet-input"
-          onInput={(e) => setName(e.currentTarget.value)}
-          placeholder="Enter a name..."
-        />
-        <button type="submit">Greet</button>
-      </form>
-      <p>{greetMsg}</p>
+      <button onClick={dumpBtm} type="button">
+        sfltool dumpbtm
+      </button>
+      {/* ===== uncomment to show env variables ===== */}
+      {/* {Object.entries(import.meta.env).map(
+        ([key, value]: [key: string, value: string | number | boolean]) => (
+          <li>
+            {key}: {`${String(value)}`}
+          </li>
+        ),
+      )} */}
     </main>
   );
 }

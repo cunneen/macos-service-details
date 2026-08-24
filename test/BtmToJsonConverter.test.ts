@@ -2,9 +2,11 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { Logger } from "tslog";
 import { describe, expect, it, test } from "vitest";
-import { BtmToJsonConverter } from "../src/util/BtmToJsonConverter";
+import { BtmToJsonConverter, setLogger } from "../src/util/BtmToJsonConverter";
 
 const log = Logger.fromEnv({ name: "TEST: BtmParser" });
+setLogger(log);
+
 const INPUT_FILE_PATH = path.join(__dirname, "assets", "dumpbtm.txt");
 const INVALID_TOKEN_FILE_PATH = path.join(
   __dirname,

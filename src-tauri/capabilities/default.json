@@ -8,6 +8,49 @@
   "permissions": [
     "core:default",
     "opener:default",
-    "log:default"
+    "log:default",
+    "shell:default",
+    {
+      "identifier": "shell:allow-execute",
+      "allow": [
+        {
+          "name": "check-groups",
+          "cmd": "sh",
+          "args": [
+            "-c",
+            "groups ${LOGNAME}"
+          ],
+          "sidecar": false
+        },
+        {
+          "name": "dumpbtm",
+          "cmd": "sudo",
+          "args": [
+            "sfltool",
+            "dumpbtm"
+          ],
+          "sidecar": false
+        },
+        {
+          "name": "exec-sh",
+          "cmd": "sh",
+          "args": [
+            "-c",
+            {
+              "validator": "^echo .*"
+            }
+          ],
+          "sidecar": false
+        },
+        {
+          "name": "sudo",
+          "cmd": "sudo",
+          "args": [
+            "whoami"
+          ],
+          "sidecar": false
+        }
+      ]
+    }
   ]
 }

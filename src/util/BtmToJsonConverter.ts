@@ -1,7 +1,12 @@
+import type { default as LoggerType } from "abstract-logging";
+import * as Logger from "abstract-logging";
 import * as chevrotain from "chevrotain";
-import { Logger } from "tslog";
 
-const log = Logger.fromEnv({ name: "dumpBtmProcessor" });
+let log: LoggerType = Logger;
+
+export const setLogger = (l: LoggerType) => {
+  log = l;
+};
 
 /**
  * Tokenizes and parses a dumpbtm.txt file into a JSON object
