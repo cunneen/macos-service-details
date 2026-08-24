@@ -3,6 +3,12 @@ import preactLogo from "./assets/preact.svg";
 import { invoke } from "@tauri-apps/api/core";
 import "./App.css";
 
+import { warn, debug, trace, info, error } from '@tauri-apps/plugin-log';
+
+trace('Trace');
+info('Info');
+error('Error');
+
 function App() {
   const [greetMsg, setGreetMsg] = useState("");
   const [name, setName] = useState("");

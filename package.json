@@ -46,11 +46,11 @@
     "create-dumpbtm": "sudo sfltool dumpbtm > ./test/assets/dumpbtm.txt"
   },
   "dependencies": {
-    "preact": "^10.25.1",
     "@tauri-apps/api": "^2",
     "@tauri-apps/plugin-log": "^2.9.0",
     "@tauri-apps/plugin-opener": "^2",
     "@vscode/sudo-prompt": "^9.3.2",
-    "chevrotain": "^13.2.0"
+    "chevrotain": "^13.2.0",
+    "preact": "^10.25.1"
   }
 }
