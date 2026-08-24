@@ -1,70 +1,50 @@
-// When using the Tauri API npm package:
+import { useState } from "preact/hooks";
+import preactLogo from "./assets/preact.svg";
 import { invoke } from "@tauri-apps/api/core";
-import { debug, error, info, trace, warn } from "@tauri-apps/plugin-log";
-import { useCallback } from "react";
 import "./App.css";
 
-// ... so it looks like we can't use sudoCommand (or anything that uses node internals e.g. process, os etc)
-// import { sudoCommand } from "./util/sudoCommand";
-
-const log = {
-  debug,
-  error,
-  info,
-  trace,
-  warn,
-};
-
 function App() {
-  log.debug(`rendering ${new Date()}`);
-  const callRustHandler = useCallback(async () => {
-    const response = await invoke("my_custom_command", { foo: "bar" });
-    log.info(`callRustHandler response: ${response}`);
-  }, []);
-  const logMessageHandler = useCallback(() => {
-    log.info("logMessageHandler");
-  }, []);
-  // // can't use sudoCommand in tauri
-  // const sudoCommandHandler = useCallback(async () => {
-  //   const sudoResult = await sudoCommand({
-  //     command: `echo "hey \${LOGNAME} won't you take me to a funky town?"`,
-  //     name: "Auth required",
-  //     icns: "/System/Library/CoreServices/CoreTypes.bundle/Contents/Resources/AlertNoteIcon.icns",
-  //   });
-  //   log.info(`sudoEchoHandler: ${sudoResult}`);
-  // }, []);
+  const [greetMsg, setGreetMsg] = useState("");
+  const [name, setName] = useState("");
+
+  async function greet() {
+    // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
+    setGreetMsg(await invoke("greet", { name }));
+  }
+
   return (
-    <section id="center">
-      <div>
-        <h1>Get started</h1>
-        <p>Push the button</p>
+    <main class="container">
+      <h1>Welcome to Tauri + Preact</h1>
+
+      <div class="row">
+        <a href="https://vite.dev" target="_blank">
+          <img src="/vite.svg" class="logo vite" alt="Vite logo" />
+        </a>
+        <a href="https://tauri.app" target="_blank">
+          <img src="/tauri.svg" class="logo tauri" alt="Tauri logo" />
+        </a>
+        <a href="https://preactjs.com" target="_blank">
+          <img src={preactLogo} class="logo preact" alt="Preact logo" />
+        </a>
       </div>
-      <button
-        id="callRust"
-        type="button"
-        className="counter"
-        onClick={callRustHandler}
+      <p>Click on the Tauri, Vite, and Preact logos to learn more.</p>
+
+      <form
+        class="row"
+        onSubmit={(e) => {
+          e.preventDefault();
+          greet();
+        }}
       >
-        Call Rust
-      </button>
-      <button
-        id="logMessage"
-        type="button"
-        className="counter"
-        onClick={logMessageHandler}
-      >
-        Log Message with Logger
-      </button>
-      {/* can't use sudoCommand in tauri */}
-      {/* <button
-        id="sudoCommand"
-        type="button"
-        className="counter"
-        onClick={sudoCommandHandler}
-      >
-        Won't you take me to...
-      </button> */}
-    </section>
+        <input
+          id="greet-input"
+          onInput={(e) => setName(e.currentTarget.value)}
+          placeholder="Enter a name..."
+        />
+        <button type="submit">Greet</button>
+      </form>
+      <p>{greetMsg}</p>
+    </main>
   );
 }
 

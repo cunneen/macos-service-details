@@ -14,11 +14,9 @@
     "@commitlint/cli": "^21.2.2",
     "@commitlint/config-conventional": "^21.2.2",
     "@dotenvx/dotenvx": "^2.21.0",
+    "@preact/preset-vite": "^2.10.5",
     "@tauri-apps/cli": "^2.11.4",
     "@types/node": "^24.13.3",
-    "@types/react": "^19.2.17",
-    "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^6.0.4",
     "@vitest/coverage-v8": "^4.1.11",
     "chai": "^6.2.2",
     "git-cliff": "^2.13.1",
@@ -27,7 +25,7 @@
     "release-it": "^21.0.2",
     "ts-node": "^10.9.2",
     "tslog": "^5.1.0",
-    "typescript": "~6.0.2",
+    "typescript": "~6.0.3",
     "vite": "^8.2.0",
     "vitest": "^4.1.11"
   },
@@ -48,10 +46,11 @@
     "create-dumpbtm": "sudo sfltool dumpbtm > ./test/assets/dumpbtm.txt"
   },
   "dependencies": {
+    "preact": "^10.25.1",
+    "@tauri-apps/api": "^2",
     "@tauri-apps/plugin-log": "^2.9.0",
+    "@tauri-apps/plugin-opener": "^2",
     "@vscode/sudo-prompt": "^9.3.2",
-    "chevrotain": "^13.2.0",
-    "react": "^19.2.8",
-    "react-dom": "^19.2.8"
+    "chevrotain": "^13.2.0"
   }
 }

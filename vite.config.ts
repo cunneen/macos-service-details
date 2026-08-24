@@ -1,17 +1,18 @@
 /// <reference types="vitest/config" />
-import react from "@vitejs/plugin-react";
+import process from "node:process";
+import preact from "@preact/preset-vite";
 import { defineConfig } from "vite";
 
 const host = process.env.TAURI_DEV_HOST;
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [preact()],
   // prevent vite from obscuring rust errors
   clearScreen: false,
   server: {
     // make sure this port matches the devUrl port in tauri.conf.json file
-    port: 5173,
+    port: 1420,
     // Tauri expects a fixed port, fail if that port is not available
     strictPort: true,
     // if the host Tauri is expecting is set, use it
