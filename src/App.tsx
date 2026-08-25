@@ -1,13 +1,16 @@
 import * as log from "@tauri-apps/plugin-log";
 import { Command } from "@tauri-apps/plugin-shell";
 import { useCallback, useState } from "preact/hooks";
+
 import "./App.css";
 import { BtmToJsonConverter, setLogger } from "./util/BtmToJsonConverter";
+import { PersonTable } from "./PersonTable";
 
 // set the logger on the BtmToJsonConverter
 setLogger(log);
 // show log messages in the webview console
 log.attachConsole();
+
 
 function App() {
   const [_dumpBtmRaw, setDumpBtmRaw] = useState("");
@@ -52,6 +55,9 @@ function App() {
           </li>
         ),
       )} */}
+      {state === "Success!" && (
+        <PersonTable data={_dumpBtmParsed as any[]} />
+      )}
     </main>
   );
 }
