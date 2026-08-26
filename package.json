@@ -21,6 +21,7 @@
     "@vitejs/plugin-react": "^6.1.0",
     "@vitest/coverage-v8": "^4.1.11",
     "chai": "^6.2.2",
+    "esbuild": "^0.28.2",
     "git-cliff": "^2.13.1",
     "husky": "^9.1.7",
     "oxlint": "^1.75.0",
