@@ -1,5 +1,5 @@
 "use client";
-import type { SortDescriptor } from "@heroui/react";
+import type { Key, SortDescriptor } from "@heroui/react";
 import { Chip, Pagination, Table } from "@heroui/react";
 import type { ColumnDef, SortingState } from "@tanstack/react-table";
 import {
@@ -86,15 +86,29 @@ export function SFLTable({ data = [] }: { data: any[] }) {
 
   const [sorting, setSorting] = useState<SortingState>([]);
 
+  const sortDescriptor = useMemo(() => toSortDescriptor(sorting), [sorting]);
+
+  const sortedData = useMemo(() => {
+    return [...flattenedData].sort((a, b) => {
+      const col = sortDescriptor?.column as Key;
+      const first = String(a[col]);
+      const second = String(b[col]);
+      let cmp = first.localeCompare(second);
+
+      if (sortDescriptor?.direction === "descending") {
+        cmp *= -1;
+      }
+      return cmp;
+    });
+  }, [sortDescriptor, flattenedData]);
+
   // eslint-disable-next-line react-hooks/incompatible-library
   const table = useTable({
     key: "person-table", // registers this table with the devtools
     features,
     columns,
-    data: flattenedData,
+    data: sortedData,
   });
-
-  const sortDescriptor = useMemo(() => toSortDescriptor(sorting), [sorting]);
 
   // const { pageIndex } = table.getState().pagination;
   // const pageCount = table.getPageCount();
