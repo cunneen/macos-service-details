@@ -1,23 +1,24 @@
-import * as log from "@tauri-apps/plugin-log";
+import { Button } from "@heroui/react";
 import { Command } from "@tauri-apps/plugin-shell";
-import { useCallback, useState } from "preact/hooks";
-
+import { useCallback, useState } from "react";
 import "./App.css";
+import { TanstackTable } from "./PersonTable";
 import { BtmToJsonConverter, setLogger } from "./util/BtmToJsonConverter";
-import { PersonTable } from "./PersonTable";
+import { getLoggerForCurrentRuntime } from "./util/getLoggerForCurrentRuntime";
+import { isTauriRuntime } from "./util/isTauriRuntime";
 
+const log = getLoggerForCurrentRuntime();
 // set the logger on the BtmToJsonConverter
 setLogger(log);
-// show log messages in the webview console
-log.attachConsole();
 
+const isTauri = isTauriRuntime();
 
 function App() {
   const [_dumpBtmRaw, setDumpBtmRaw] = useState("");
   const [_dumpBtmParsed, setDumpBtmParsed] = useState<object | undefined>();
   const [state, setState] = useState("Run Commands");
 
-  const dumpBtm = useCallback(async (_e: MouseEvent) => {
+  const dumpBtm = useCallback(async () => {
     setState("loading");
     const result = await Command.create("dumpbtm", [
       "sfltool",
@@ -41,12 +42,12 @@ function App() {
   }, []);
 
   return (
-    <main class="container">
-      <h1>{state}</h1>
+    <main className={"container flex items-center content-center flex-col my-10"}>
+      <h1 className={"text-2xl flex-1"}>{state}</h1>
 
-      <button onClick={dumpBtm} type="button">
+      <Button isDisabled={!isTauri} onClick={dumpBtm} className={"my-4"}>
         sfltool dumpbtm
-      </button>
+      </Button>
       {/* ===== uncomment to show env variables ===== */}
       {/* {Object.entries(import.meta.env).map(
         ([key, value]: [key: string, value: string | number | boolean]) => (
@@ -56,7 +57,7 @@ function App() {
         ),
       )} */}
       {state === "Success!" && (
-        <PersonTable data={_dumpBtmParsed as any[]} />
+        <TanstackTable data={_dumpBtmParsed as any[]} />
       )}
     </main>
   );

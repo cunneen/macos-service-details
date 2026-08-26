@@ -1,13 +1,17 @@
 /// <reference types="vitest/config" />
 import process from "node:process";
-import preact from "@preact/preset-vite";
+import react from '@vitejs/plugin-react'
+import tailwindcss from '@tailwindcss/vite'
 import { defineConfig } from "vite";
 
 const host = process.env.TAURI_DEV_HOST;
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [preact()],
+  plugins: [
+    react(),
+    tailwindcss(),
+  ],
   // prevent vite from obscuring rust errors
   clearScreen: false,
   server: {

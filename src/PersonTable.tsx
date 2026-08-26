@@ -1,25 +1,20 @@
-import type { ColumnDef } from "@tanstack/preact-table";
+"use client";
+import type { SortDescriptor } from "@heroui/react";
+import { Chip, Pagination, Table } from "@heroui/react";
+import type { ColumnDef, SortingState } from "@tanstack/react-table";
 import {
+  createColumnHelper,
+  createCoreRowModel,
+  createPaginatedRowModel,
   createSortedRowModel,
   rowSortingFeature,
   sortFns,
   tableFeatures,
+  flexRender,
   useTable,
-} from "@tanstack/preact-table";
+} from "@tanstack/react-table";
+import { useMemo, useState } from "react";
 
-// 1. Define the shape of your data
-type Person = {
-  firstName: string;
-  lastName: string;
-  age: number;
-};
-
-// // 2. Give your data a stable reference (module scope, useState, a query cache, etc.)
-// const data: Array<Person> = [
-//   { firstName: "tanner", lastName: "linsley", age: 24 },
-//   { firstName: "tandy", lastName: "miller", age: 40 },
-//   { firstName: "joe", lastName: "dirte", age: 45 },
-// ];
 
 // 3. New in v9: declare which features this table uses (none yet)
 const features = tableFeatures({
@@ -28,86 +23,146 @@ const features = tableFeatures({
   sortFns, // built-in sort functions
 });
 
-// 4. Define your columns
-// const columns: Array<ColumnDef<typeof features, Person>> = [
-//   {
-//     accessorKey: "firstName", // accessorKey shorthand
-//     header: "First Name",
-//     cell: (info) => info.getValue(),
-//   },
-//   {
-//     accessorFn: (row) => row.lastName, // accessorFn alternative with a custom id
-//     id: "lastName",
-//     header: () => <span>Last Name</span>,
-//     cell: (info) => <i>{info.getValue<string>()}</i>,
-//   },
-//   {
-//     accessorKey: "age",
-//     header: () => "Age",
-//   },
-// ];
-type DynamicRow = Record<string, unknown>
 
-const formatHeader = (i:any) => i;
+type DynamicRow = Record<string, unknown>;
 
+const formatHeader = (i: any) => i;
 
+// --- Sorting Bridge -------------------------------------------------------
+// Convert TanStack SortingState → React Aria SortDescriptor
+function toSortDescriptor(sorting: SortingState): SortDescriptor | undefined {
+  const first = sorting[0];
 
-export function PersonTable({data = []}: {data: any[]}) {
-const columns: Array<ColumnDef<typeof features, DynamicRow>> = data.length
-  ? Object.keys(data[0]).map((key) => ({
-      accessorKey: key,
-      header: formatHeader(key), // e.g. 'firstName' -> 'First Name'
-      cell: (info) => String(info.getValue() ?? ''), // values are unknown, so coerce for rendering
-    }))
-  : [];
-    // 5. Create the table instance
+  if (!first) return undefined;
+
+  return {
+    column: first.id,
+    direction: first.desc ? "descending" : "ascending",
+  };
+}
+
+// Convert React Aria SortDescriptor → TanStack SortingState
+function toSortingState(descriptor: SortDescriptor): SortingState {
+  return [{desc: descriptor.direction === "descending", id: descriptor.column as string}];
+}
+
+const flattenDeep = (arr: any[]) => Array.isArray(arr)
+  ? arr.reduce( (a, b) => a.concat(flattenDeep(b)) , [])
+  : [arr];
+
+const mapBtmItems = (arr: any[]) => arr.map((i:any) => (i.items.map((ii:any) => ({UID: i.UID, GUID: i.GUID, ...i.state, ...ii}))));
+
+// --- Component ------------------------------------------------------------
+const PAGE_SIZE = 4;
+
+export function TanstackTable({ data = [] }: { data: any[] }) {
+
+  const flattenedData = flattenDeep(mapBtmItems(data));
+
+  const columns: Array<ColumnDef<typeof features, DynamicRow>> = flattenedData.length
+    ? Object.keys(flattenedData[0]).map((key) => ({
+        accessorKey: key,
+        header: formatHeader(key), // e.g. 'firstName' -> 'First Name'
+        cell: (info) => String(info.getValue() ?? ""), // values are unknown, so coerce for rendering
+      }))
+    : [];
+
+  const [sorting, setSorting] = useState<SortingState>([]);
+
+  // eslint-disable-next-line react-hooks/incompatible-library
   const table = useTable({
     key: "person-table", // registers this table with the devtools
     features,
     columns,
-    data,
+    data: flattenedData,
   });
 
-  // 6. Render markup from the table instance APIs
+  const sortDescriptor = useMemo(() => toSortDescriptor(sorting), [sorting]);
+
+  // const { pageIndex } = table.getState().pagination;
+  // const pageCount = table.getPageCount();
+  // const pages = Array.from({ length: pageCount }, (_, i) => i + 1);
+  // const start = pageIndex * PAGE_SIZE + 1;
+  // const end = Math.min((pageIndex + 1) * PAGE_SIZE, users.length);
+
   return (
-    <table>
-      <thead>
-        {table.getHeaderGroups().map((headerGroup) => (
-          <tr key={headerGroup.id}>
-            {headerGroup.headers.map((header) => (
-              <th key={header.id}>
-                {header.isPlaceholder ? null : (
-                  <div
-                    style={{
-                      cursor: header.column.getCanSort()
-                        ? "pointer"
-                        : undefined,
-                    }}
-                    onClick={header.column.getToggleSortingHandler()}
-                  >
-                    <table.FlexRender header={header} />
-                    {{
-                      asc: " 🔼",
-                      desc: " 🔽",
-                    }[header.column.getIsSorted() as string] ?? null}
-                  </div>
+    <Table className={"my-4"}>
+      <Table.ScrollContainer>
+        <Table.Content
+          aria-label="TanStack Table example"
+          className="min-w-150"
+          sortDescriptor={sortDescriptor}
+          onSortChange={(d) => setSorting(toSortingState(d))}
+        >
+          <Table.Header>
+            {table.getHeaderGroups()[0]!.headers.map((header) => (
+              <Table.Column
+                key={header.id}
+                allowsSorting={header.column.getCanSort()}
+                id={header.id}
+                isRowHeader={header.id === "name"}
+              >
+                {({ sortDirection }) => (
+                  <Table.SortableColumnHeader sortDirection={sortDirection}>
+                    {flexRender(
+                      header.column.columnDef.header,
+                      header.getContext(),
+                    )}
+                  </Table.SortableColumnHeader>
                 )}
-              </th>
+              </Table.Column>
             ))}
-          </tr>
-        ))}
-      </thead>
-      <tbody>
-        {table.getRowModel().rows.map((row) => (
-          <tr key={row.id}>
-            {row.getAllCells().map((cell) => (
-              <td key={cell.id}>
-                <table.FlexRender cell={cell} />
-              </td>
+          </Table.Header>
+          <Table.Body>
+            {table.getRowModel().rows.map((row) => (
+              <Table.Row key={row.id} id={row.id}>
+                {row.getAllCells().map((cell) => (
+                  <Table.Cell key={cell.id}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </Table.Cell>
+                ))}
+              </Table.Row>
             ))}
-          </tr>
-        ))}
-      </tbody>
-    </table>
+          </Table.Body>
+        </Table.Content>
+      </Table.ScrollContainer>
+      <Table.Footer>
+        {/* <Pagination size="sm">
+          <Pagination.Summary>
+            {start} to {end} of {users.length} results
+          </Pagination.Summary>
+          <Pagination.Content>
+            <Pagination.Item>
+              <Pagination.Previous
+                isDisabled={!table.getCanPreviousPage()}
+                onPress={() => table.previousPage()}
+              >
+                <Pagination.PreviousIcon />
+                Prev
+              </Pagination.Previous>
+            </Pagination.Item>
+            {pages.map((p) => (
+              <Pagination.Item key={p}>
+                <Pagination.Link
+                  isActive={p === pageIndex + 1}
+                  onPress={() => table.setPageIndex(p - 1)}
+                >
+                  {p}
+                </Pagination.Link>
+              </Pagination.Item>
+            ))}
+            <Pagination.Item>
+              <Pagination.Next
+                isDisabled={!table.getCanNextPage()}
+                onPress={() => table.nextPage()}
+              >
+                Next
+                <Pagination.NextIcon />
+              </Pagination.Next>
+            </Pagination.Item>
+          </Pagination.Content>
+        </Pagination> */}
+      </Table.Footer>
+    </Table>
   );
 }
