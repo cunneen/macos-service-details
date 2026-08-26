@@ -43,10 +43,26 @@
           "sidecar": false
         },
         {
-          "name": "sudo",
+          "name": "getUserIDs",
           "cmd": "sudo",
           "args": [
-            "whoami"
+            "sh",
+            "-c",
+            {
+              "validator": "^dscl . -list .*"
+            }
+          ],
+          "sidecar": false
+        },
+        {
+          "name": "getUserGUIDs",
+          "cmd": "sudo",
+          "args": [
+            "sh",
+            "-c",
+            {
+              "validator": "^dscl . -list .*"
+            }
           ],
           "sidecar": false
         }
