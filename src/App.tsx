@@ -2,7 +2,7 @@ import { Button } from "@heroui/react";
 import { Command } from "@tauri-apps/plugin-shell";
 import { useCallback, useState } from "react";
 import "./App.css";
-import { TanstackTable } from "./PersonTable";
+import { SFLTable } from "./SFLTable";
 import { BtmToJsonConverter, setLogger } from "./util/BtmToJsonConverter";
 import { getLoggerForCurrentRuntime } from "./util/getLoggerForCurrentRuntime";
 import { isTauriRuntime } from "./util/isTauriRuntime";
@@ -42,7 +42,7 @@ function App() {
   }, []);
 
   return (
-    <main className={"container flex items-center content-center flex-col my-10"}>
+    <main className={"flex items-center content-center flex-col flex-1 w-full p-10 max-w-5/6"}>
       <h1 className={"text-2xl flex-1"}>{state}</h1>
 
       <Button isDisabled={!isTauri} onClick={dumpBtm} className={"my-4"}>
@@ -57,7 +57,7 @@ function App() {
         ),
       )} */}
       {state === "Success!" && (
-        <TanstackTable data={_dumpBtmParsed as any[]} />
+        <SFLTable data={_dumpBtmParsed as any[]} />
       )}
     </main>
   );
