@@ -1,19 +1,21 @@
+/** biome-ignore-all lint/suspicious/noExplicitAny: This should be a generic table as far as possible */
 "use client";
 import type { Key, SortDescriptor } from "@heroui/react";
-import { Chip, Pagination, Table } from "@heroui/react";
+import { 
+  Table, 
+  // TableLayout, 
+  // Virtualizer 
+} from "@heroui/react";
 import type { ColumnDef, SortingState } from "@tanstack/react-table";
 import {
-  createColumnHelper,
-  createCoreRowModel,
-  createPaginatedRowModel,
   createSortedRowModel,
+  flexRender,
   rowSortingFeature,
   sortFns,
   tableFeatures,
-  flexRender,
   useTable,
 } from "@tanstack/react-table";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 // 3. New in v9: declare which features this table uses (none yet)
 const features = tableFeatures({
@@ -60,29 +62,70 @@ const mapBtmItems = (arr: any[]) =>
   );
 
 // --- Component ------------------------------------------------------------
-const PAGE_SIZE = 4;
+// const PAGE_SIZE = 4;
 
-export function SFLTable({ data = [] }: { data: any[] }) {
-  const flattenedData = flattenDeep(mapBtmItems(data));
+export function SFLTable({
+  data = [],
+  userIDs = {},
+  userGUIDs = {},
+}: {
+  data: any[];
+  userIDs: { [k: string]: string };
+  userGUIDs: { [k: string]: string };
+}) {
+  const [columns, setColumns] = useState<
+    ColumnDef<typeof features, DynamicRow>[]
+  >([]);
+  const [flattenedData, setFlattenedData] = useState<any[]>([]);
 
-  // dynamically obtain columns, if we have any data
-  const columns: Array<ColumnDef<typeof features, DynamicRow>> =
-    flattenedData.length
-      ? flattenedData
-          .reduce((prev: any[], curr: any, idx: number) => {
-            for (const key of Object.keys(curr)) {
-              if (!prev.includes(key)) {
-                return [...prev, key];
+  useEffect(() => {
+    const flattened = flattenDeep(mapBtmItems(data));
+    setFlattenedData(flattened);
+  }, [data]);
+
+  useEffect(() => {
+    // dynamically obtain columns, if we have any data
+    const columnDefs: Array<ColumnDef<typeof features, DynamicRow>> =
+      flattenedData.length
+        ? flattenedData
+            .reduce((prev: any[], curr: any) => {
+              for (const key of Object.keys(curr)) {
+                if (!prev.includes(key)) {
+                  prev.push(key);
+                  return prev;
+                }
               }
-            }
-            return prev;
-          }, [])
-          .map((key) => ({
-            accessorKey: key,
-            header: formatHeader(key), // e.g. 'firstName' -> 'First Name'
-            cell: (info) => String(info.getValue() ?? ""), // values are unknown, so coerce for rendering
-          }))
-      : [];
+              return prev;
+            }, [])
+            .map((key) => {
+              const colDef: ColumnDef<typeof features, DynamicRow> = {
+                accessorKey: key,
+                header: formatHeader(key), // e.g. 'firstName' -> 'First Name'
+                cell: (info) => String(info.getValue() ?? ""), // values are unknown, so coerce for rendering
+                id: key,
+              };
+
+              if (
+                ["GUID", "UID"].includes(key) &&
+                Object.keys(userGUIDs)?.length &&
+                Object.keys(userIDs)?.length
+              ) {
+                switch (key) {
+                  case "UID":
+                    colDef.cell = (info) =>
+                      String(userIDs[info.getValue() as string]);
+                    break;
+                  case "GUID":
+                    colDef.cell = (info) =>
+                      String(userGUIDs[info.getValue() as string]);
+                    break;
+                }
+              }
+              return colDef;
+            })
+        : [];
+    setColumns(columnDefs);
+  }, [flattenedData.reduce, flattenedData.length, userGUIDs, userIDs]);
 
   const [sorting, setSorting] = useState<SortingState>([]);
 
@@ -117,47 +160,62 @@ export function SFLTable({ data = [] }: { data: any[] }) {
   // const end = Math.min((pageIndex + 1) * PAGE_SIZE, users.length);
 
   return (
-    <Table className={"m-4 "}>
-      <Table.ScrollContainer>
-        <Table.Content
-          aria-label="TanStack Table example"
-          sortDescriptor={sortDescriptor}
-          onSortChange={(d) => setSorting(toSortingState(d))}
-        >
-          <Table.Header>
-            {table.getHeaderGroups()[0]!.headers.map((header) => (
-              <Table.Column
-                key={header.id}
-                allowsSorting={header.column.getCanSort()}
-                id={header.id}
-                isRowHeader={header.id === "name"}
-              >
-                {({ sortDirection }) => (
-                  <Table.SortableColumnHeader sortDirection={sortDirection}>
-                    {flexRender(
-                      header.column.columnDef.header,
-                      header.getContext(),
-                    )}
-                  </Table.SortableColumnHeader>
-                )}
-              </Table.Column>
-            ))}
-          </Table.Header>
-          <Table.Body>
-            {table.getRowModel().rows.map((row) => (
-              <Table.Row key={row.id} id={row.id}>
-                {row.getAllCells().map((cell) => (
-                  <Table.Cell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </Table.Cell>
-                ))}
-              </Table.Row>
-            ))}
-          </Table.Body>
-        </Table.Content>
-      </Table.ScrollContainer>
-      <Table.Footer>
-        {/* <Pagination size="sm">
+    // <Virtualizer
+    //   layout={TableLayout}
+    //   layoutOptions={
+    //     {
+    //       // headingHeight: 42,
+    //       // rowHeight: 42,
+    //     }
+    //   }
+    // >
+      <Table className={"my-4"}>
+        <Table.ScrollContainer>
+          {/* <Table.ResizableContainer> */}
+          <Table.Content
+            aria-label="TanStack Table example"
+            sortDescriptor={sortDescriptor}
+            onSortChange={(d) => setSorting(toSortingState(d))}
+          >
+            <Table.Header>
+              {table.getHeaderGroups()[0]!.headers.map((header) => (
+                <Table.Column
+                  key={header.id}
+                  allowsSorting={header.column.getCanSort()}
+                  id={header.id}
+                  isRowHeader={header.id === "name"}
+                >
+                  {({ sortDirection }) => (
+                    <Table.SortableColumnHeader sortDirection={sortDirection}>
+                      {flexRender(
+                        header.column.columnDef.header,
+                        header.getContext(),
+                      )}
+                      {/* <Table.ColumnResizer /> */}
+                    </Table.SortableColumnHeader>
+                  )}
+                </Table.Column>
+              ))}
+            </Table.Header>
+            <Table.Body>
+              {table.getRowModel().rows.map((row) => (
+                <Table.Row key={row.id} id={row.id}>
+                  {row.getAllCells().map((cell) => (
+                    <Table.Cell key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
+                    </Table.Cell>
+                  ))}
+                </Table.Row>
+              ))}
+            </Table.Body>
+          </Table.Content>
+          {/* </Table.ResizableContainer> */}
+        </Table.ScrollContainer>
+        <Table.Footer>
+          {/* <Pagination size="sm">
           <Pagination.Summary>
             {start} to {end} of {users.length} results
           </Pagination.Summary>
@@ -192,7 +250,8 @@ export function SFLTable({ data = [] }: { data: any[] }) {
             </Pagination.Item>
           </Pagination.Content>
         </Pagination> */}
-      </Table.Footer>
-    </Table>
+        </Table.Footer>
+      </Table>
+    // </Virtualizer>
   );
 }
