@@ -2,17 +2,9 @@
 
 <div align="center" style="box-sizing: border-box;">
 
-<span style="">_"The only tool you'll need in order to manage your Mac"_</span>
+<span style="">_"Take a peek under your Mac"_</span>
 
 <!-- PROJECT SHIELDS -->
-<!--
-*** I'm using markdown "reference style" links for readability.
-*** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
-*** See the bottom of this document for the declaration of the reference variables
-*** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
-*** https://www.markdownguide.org/basic-syntax/#reference-style-links
--->
-
 
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
@@ -25,22 +17,22 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/cunneen/macos-service-details">
+  <a href="https://github.com/cunneen/pervert">
   <img src="./public/apple.svg" height="80" width="80" alt="macOS"  />
   </a>
-<h3 align="center">macos-service-details</h3>
+<h3 align="center">Pervert</h3>
 
   <p align="center">
     GUI for viewing MacOS service details
     <br />
-    <a href="https://github.com/cunneen/macos-service-details"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/cunneen/pervert"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/cunneen/macos-service-details">View Demo</a>
+    <a href="https://github.com/cunneen/pervert">View Demo</a>
     &middot;
-    <a href="https://github.com/cunneen/macos-service-details/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
+    <a href="https://github.com/cunneen/pervert/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
     &middot;
-    <a href="https://github.com/cunneen/macos-service-details/issues/new?labels=enhancement&template=feature-request---.md">Request Feature</a>
+    <a href="https://github.com/cunneen/pervert/issues/new?labels=enhancement&template=feature-request---.md">Request Feature</a>
   </p>
 </div>
 
@@ -126,7 +118,7 @@ The goal of this project is to (eventually) be:
 
 1. Clone the repo
    ```sh
-   git clone https://github.com/cunneen/macos-service-details.git
+   git clone https://github.com/cunneen/pervert.git
    ```
 2. Install NPM packages
    ```sh
@@ -143,7 +135,7 @@ The goal of this project is to (eventually) be:
 In the future you'll be able to install and run the app from the command line, e.g.:
 
 ```sh
-npx macos-service-details
+npx pervert
 ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -186,7 +178,7 @@ Coming soon...
 - [ ] UI front-end to install / update / remove Homebrew and App Store packages
   - as per [Cork][Cork], [Applite][Applite]
 
-See the [open issues](https://github.com/cunneen/macos-service-details/issues) for a full list of proposed features (and known issues).
+See the [open issues](https://github.com/cunneen/pervert/issues) for a full list of proposed features (and known issues).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -209,8 +201,8 @@ Don't forget to give the project a star! Thanks again!
 
 ### Top contributors:
 
-<a href="https://github.com/cunneen/macos-service-details/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=cunneen/macos-service-details" alt="contrib.rocks image" />
+<a href="https://github.com/cunneen/pervert/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=cunneen/pervert" alt="contrib.rocks image" />
 </a>
 
 <!-- LICENSE -->
@@ -242,16 +234,16 @@ These applications are genuinely useful, and have inspired various aspects:
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
-[contributors-shield]: https://img.shields.io/github/contributors/cunneen/macos-service-details.svg?style=for-the-badge
-[contributors-url]: https://github.com/cunneen/macos-service-details/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/cunneen/macos-service-details.svg?style=for-the-badge
-[forks-url]: https://github.com/cunneen/macos-service-details/network/members
-[stars-shield]: https://img.shields.io/github/stars/cunneen/macos-service-details.svg?style=for-the-badge
-[stars-url]: https://github.com/cunneen/macos-service-details/stargazers
-[issues-shield]: https://img.shields.io/github/issues/cunneen/macos-service-details.svg?style=for-the-badge
-[issues-url]: https://github.com/cunneen/macos-service-details/issues
-[license-shield]: https://img.shields.io/github/license/cunneen/macos-service-details.svg?style=for-the-badge
-[license-url]: https://github.com/cunneen/macos-service-details/blob/master/LICENSE.md
+[contributors-shield]: https://img.shields.io/github/contributors/cunneen/pervert.svg?style=for-the-badge
+[contributors-url]: https://github.com/cunneen/pervert/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/cunneen/pervert.svg?style=for-the-badge
+[forks-url]: https://github.com/cunneen/pervert/network/members
+[stars-shield]: https://img.shields.io/github/stars/cunneen/pervert.svg?style=for-the-badge
+[stars-url]: https://github.com/cunneen/pervert/stargazers
+[issues-shield]: https://img.shields.io/github/issues/cunneen/pervert.svg?style=for-the-badge
+[issues-url]: https://github.com/cunneen/pervert/issues
+[license-shield]: https://img.shields.io/github/license/cunneen/pervert.svg?style=for-the-badge
+[license-url]: https://github.com/cunneen/pervert/blob/master/LICENSE.md
 
 <!-- Shields.io badges. You can a comprehensive list with many more badges at: https://github.com/inttter/md-badges -->
 
