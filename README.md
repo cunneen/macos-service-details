@@ -18,7 +18,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/cunneen/pervert">
-  <img src="./public/apple.svg" height="80" width="80" alt="macOS"  />
+  <img src="./src-tauri/icons/128x128@2x.png" height="128" width="128" alt="logo"  />
   </a>
 <h3 align="center">Pervert</h3>
 
@@ -28,8 +28,6 @@
     <a href="https://github.com/cunneen/pervert"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/cunneen/pervert">View Demo</a>
-    &middot;
     <a href="https://github.com/cunneen/pervert/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
     &middot;
     <a href="https://github.com/cunneen/pervert/issues/new?labels=enhancement&template=feature-request---.md">Request Feature</a>
@@ -65,13 +63,11 @@
 
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+<a href="./public/2026-08-28_screenshot.jpg" title="full screenshot"><img src="./public/2026-08-28_screenshot.jpg"  height="auto" width="250" alt="screenshot" /></a>
 
 A GUI to explore MacOS processes and their configuration; largely a front-end for the built-in MacOS
 `sfltool`.
 
-| ![error] | _This is a work-in-progress. Not yet ready for use._ |
-|----------|------------------------------------------------------|
 
 ### Background
 
@@ -101,14 +97,17 @@ The goal of this project is to (eventually) be:
 
 ### Built With
 
-- ![macOS]
-- ![Node.js]
-- ![npm]
-- ![React.js]
-- ![Tauri]
-- ![Vite]
-- ![Vitest]
-- ![Visual Studio Code]
+ ![HeroUI]
+ ![macOS]
+ ![Node.js]
+ ![npm]
+ ![React.js]
+ ![rust]
+ ![tanstack]
+ ![Tauri]
+ ![Vite]
+ ![Vitest]
+ ![Visual Studio Code]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -132,11 +131,16 @@ The goal of this project is to (eventually) be:
 
 ### In the Future...
 
-In the future you'll be able to install and run the app from the command line, e.g.:
+In the future you'll be able to install and run the app:
 
-```sh
-npx pervert
-```
+- from the command line, e.g.:
+  ```sh
+  npx pervert
+  ```
+- from homebrew e.g.:
+  ```sh
+  brew install pervert
+  ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -154,7 +158,7 @@ Coming soon...
 
 ## Roadmap
 
-- [ ] Nice display of `sfltool dumpbtm` output
+- [ ] Nice display of `sfltool dumpbtm` output -- *80% complete*
 - [ ] UI to backup config
   - Automatically store incremental backups (optionally)
 - [ ] UI to restore config
@@ -247,14 +251,17 @@ These applications are genuinely useful, and have inspired various aspects:
 
 <!-- Shields.io badges. You can a comprehensive list with many more badges at: https://github.com/inttter/md-badges -->
 
-[macOS]: https://img.shields.io/badge/macOS-000000?logo=apple&logoColor=F0F0F0 "macOS"
-[Node.js]: https://img.shields.io/badge/Node.js-6DA55F?logo=node.js&logoColor=white "Node.js"
-[npm]: https://img.shields.io/badge/npm-CB3837?logo=npm&logoColor=fff "npm"
-[React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
-[Tauri]: https://img.shields.io/badge/Tauri-24C8D8?logo=tauri&logoColor=fff "Tauri"
-[Vite]: https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=fff "Vite"
-[Vitest]: https://img.shields.io/badge/Vitest-6E9F18?logo=vitest&logoColor=fff "Vitest"
-[Visual Studio Code]: https://custom-icon-badges.demolab.com/badge/Visual%20Studio%20Code-0078d7.svg?logo=visualstudiocode&logoColor=white "Visual Studio Code"
+[heroui]: https://img.shields.io/badge/HeroUI-000000?style=for-the-badge&logo=heroui&logoColor=ffffff "HeroUI"
+[macOS]: https://img.shields.io/badge/macOS-000000?style=for-the-badge&logo=apple&logoColor=F0F0F0 "macOS"
+[Node.js]: https://img.shields.io/badge/Node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white "Node.js"
+[npm]: https://img.shields.io/badge/npm-CB3837?style=for-the-badge&logo=npm&logoColor=fff "npm"
+[React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB "React.js"
+[Rust]: https://img.shields.io/badge/Rust-000000?style=for-the-badge&logo=rust&logoColor=ffffff "Rust"
+[tanstack]: https://img.shields.io/badge/TanStack-ECE8D1?style=for-the-badge&logo=TanStack&logoColor=000000 "TanStack Table"
+[Tauri]: https://img.shields.io/badge/Tauri-24C8D8?style=for-the-badge&logo=tauri&logoColor=fff "Tauri"
+[Vite]: https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=fff "Vite"
+[Vitest]: https://img.shields.io/badge/Vitest-6E9F18?style=for-the-badge&logo=vitest&logoColor=fff "Vitest"
+[Visual Studio Code]: https://custom-icon-badges.demolab.com/badge/Visual%20Studio%20Code-0078d7.svg?style=for-the-badge&logo=visualstudiocode&logoColor=white "Visual Studio Code"
 
 <!-- Acknowledgements links -->
 
@@ -274,4 +281,4 @@ These applications are genuinely useful, and have inspired various aspects:
 <!-- images -->
 [apple]: ./public/apple.svg "Apple Logo"
 [error]: ./public/error.svg "Warning"
-[product-screenshot]: ./public/comingsoon.svg "coming soon"
+

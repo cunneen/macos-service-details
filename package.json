@@ -42,6 +42,7 @@
     "preview": "vite preview",
     "release-changelog": "git-cliff --unreleased --prepend CHANGELOG.md --tag ",
     "release": "dotenvx run release-it -- -i -u",
+    "start": "tauri",
     "tauri": "tauri",
     "test": "dotenvx run -e 'TSLOG_LEVEL=INFO' -- ./node_modules/.bin/vitest",
     "test-debug": "dotenvx run -e 'TSLOG_LEVEL=DEBUG' -- ./node_modules/.bin/vitest",
