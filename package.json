@@ -1,6 +1,6 @@
 {
-  "name": "macos-service-details",
-  "description": "GUI for viewing MacOS service details",
+  "name": "pervert",
+  "description": "Take a peek under your Mac",
   "version": "0.0.1",
   "type": "module",
   "main": "index.js",
