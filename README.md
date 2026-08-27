@@ -136,7 +136,7 @@ The goal of this project is to (eventually) be:
 
 3. Run the app
    ```sh
-   npm run start
+   npm run start dev
    ```
 
 ### In the Future...
