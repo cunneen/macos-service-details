@@ -97,17 +97,27 @@ The goal of this project is to (eventually) be:
 
 ### Built With
 
- ![HeroUI]
- ![macOS]
- ![Node.js]
- ![npm]
- ![React.js]
- ![rust]
- ![tanstack]
- ![Tauri]
- ![Vite]
- ![Vitest]
- ![Visual Studio Code]
+
+
+
+
+
+
+
+
+
+
+[ ![HeroUI] ][heroui-link]
+![macOS] 
+[ ![Node.js] ][Node.js-link]
+[ ![npm] ][npm-link]
+[ ![React.js] ][React.js-link]
+[ ![rust] ][Rust-link]
+[ ![tanstack] ][tanstack table]
+[ ![Tauri] ][Tauri-link]
+[ ![Vite] ][Vite-link]
+[ ![Vitest] ][Vitest-link]
+[ ![Visual Studio Code] ][vscode-link]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -224,7 +234,7 @@ Distributed under the MPL-2.0 License. See `LICENSE.md` for more information.
 These modules are used directly. Many thanks to the creators and maintainers:
 
 - [@vscode/sudo-prompt]
-- [tinypivot]
+- [tanstack table]
 
 These applications are genuinely useful, and have inspired various aspects:
 
@@ -257,16 +267,28 @@ These applications are genuinely useful, and have inspired various aspects:
 [npm]: https://img.shields.io/badge/npm-CB3837?style=for-the-badge&logo=npm&logoColor=fff "npm"
 [React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB "React.js"
 [Rust]: https://img.shields.io/badge/Rust-000000?style=for-the-badge&logo=rust&logoColor=ffffff "Rust"
-[tanstack]: https://img.shields.io/badge/TanStack-ECE8D1?style=for-the-badge&logo=TanStack&logoColor=000000 "TanStack Table"
+[tanstack]: https://img.shields.io/badge/TanStack%20Table-ECE8D1?style=for-the-badge&logo=TanStack&logoColor=000000 "TanStack Table"
 [Tauri]: https://img.shields.io/badge/Tauri-24C8D8?style=for-the-badge&logo=tauri&logoColor=fff "Tauri"
 [Vite]: https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=fff "Vite"
 [Vitest]: https://img.shields.io/badge/Vitest-6E9F18?style=for-the-badge&logo=vitest&logoColor=fff "Vitest"
 [Visual Studio Code]: https://custom-icon-badges.demolab.com/badge/Visual%20Studio%20Code-0078d7.svg?style=for-the-badge&logo=visualstudiocode&logoColor=white "Visual Studio Code"
 
+<!-- Links for Badges -->
+[heroui-link]: https://heroui.com/  "HeroUI"
+[Node.js-link]: https://nodejs.org/ "Node.js"
+[npm-link]: https://npmjs.com/ "npm"
+[React.js-link]: https://react.dev/ "React.js"
+[Rust-link]: https://rust-lang.org/ "Rust"
+[Tauri-link]: https://tauri.app/ "Tauri"
+[Vite-link]: https://vite.dev/ "Vite"
+[Vitest-link]: https://vitest.dev/ "Vitest"
+[vscode-link]: https://code.visualstudio.com/ "Visual Studio Code"
+
+
 <!-- Acknowledgements links -->
 
 [@vscode/sudo-prompt]: https://github.com/microsoft/vscode-sudo-prompt#readme
-[tinypivot]: https://github.com/Small-Web-Co/tinypivot
+[tanstack table]: https://tanstack.com/table/latest "TanStack Table"
 
 <!-- Other links -->
 
