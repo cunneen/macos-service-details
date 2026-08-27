@@ -70,7 +70,7 @@ function App() {
           .map(([k,v]) => ([v,k]))
       );
 
-      log.info(`userGUIDs: ${JSON.stringify(userGUIDsMap)}`);
+      log.debug(`userGUIDs: ${JSON.stringify(userGUIDsMap)}`);
 
       const userIDsMap = Object.fromEntries(
         userIDsResult.stdout
@@ -81,7 +81,7 @@ function App() {
           ,
       );
 
-      log.info(`userIDs: ${JSON.stringify(userIDsMap)}`)
+      log.debug(`userIDs: ${JSON.stringify(userIDsMap)}`)
       setUserGUIDs(userGUIDsMap);
       setUserIDs(userIDsMap);
       // setState("Success!");
