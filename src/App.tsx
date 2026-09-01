@@ -4,10 +4,14 @@ import { useCallback, useState } from "react";
 import { DataTable } from "./components/DataTable";
 import { flattenDeep } from "./util/flattenDeep";
 import { getLoggerForCurrentRuntime } from "./util/log/getLoggerForCurrentRuntime";
-import { BtmToJsonConverter, setLogger } from "./util/sflist/BtmToJsonConverter";
+import {
+  BtmToJsonConverter,
+  setLogger,
+} from "./util/sflist/BtmToJsonConverter";
 import { mapBtmItems } from "./util/sflist/mapBtmItems";
 import { isTauriRuntime } from "./util/tauri/isTauriRuntime";
 import "./App.css";
+import { AccordionExample } from "./components/Accordion";
 
 const log = getLoggerForCurrentRuntime();
 // set the logger on the BtmToJsonConverter
@@ -92,11 +96,10 @@ function App() {
           </Button>
         </div>
       </div>
-      <div
-        className={
-          "flex items-start content-start flex-col flex-1"
-        }
-      >
+      <div className={"flex items-center content-center flex-col flex-1 w-screen"}>
+        <AccordionExample />
+      </div>
+      <div className={"flex items-start content-start flex-col flex-1"}>
         <DataTable
           // biome-ignore lint/suspicious/noExplicitAny: we want SFLTable to be widely applicable to different data types if possible
           data={flattenedData as any[]}
