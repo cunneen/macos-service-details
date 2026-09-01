@@ -36,28 +36,60 @@ const features = tableFeatures({
   sortFns, // built-in sort functions
 });
 
+// --- Props ------------------------------------------------------------
+/**
+ * Props for the {@link DataTable} component.
+ */
+export type DataTableProps = {
+  /**
+   * The rows to display. Each object's keys become the table's columns, and
+   * every value is coerced to a string for rendering.
+   */
+  data: any[];
+  /**
+   * Optional configuration for the table.
+   */
+  options?: {
+    /**
+     * Overrides for the virtualized layout's sizing.
+     */
+    layoutOptions?: {
+      /** Height (in px) of the header row. */
+      headingHeight?: number;
+      /** Height (in px) of each data row. */
+      rowHeight?: number;
+    };
+    /** Accessible label for the table, used by screen readers. */
+    ariaLabel?: string;
+    /** CSS class name(s) applied to the table content. */
+    className?: string;
+  };
+};
+
 // --- Component ------------------------------------------------------------
 // const PAGE_SIZE = 4;
 
-export function SFLTable({
-  data = [],
-  userGUIDs = {},
-}: {
-  data: any[];
-  userGUIDs: { [k: string]: string };
-}) {
+/**
+ * A generic, data-driven table that wraps TanStack Table and HeroUI's Table.
+ *
+ * Columns are derived automatically from the keys of the objects in `data`
+ * (via {@link formatHeader}), and each column is sized to fit its content
+ * using {@link getColumnWidths}. Rows are sorted client-side by the `UUID`
+ * column by default, and the user can re-sort by clicking any sortable column
+ * header.
+ *
+ * When `data` is empty, an {@link EmptyState} placeholder is rendered instead
+ * of the table.
+ *
+ * @param props - The {@link DataTableProps} for the table.
+ * @returns The rendered table, or an empty-state placeholder when there is no
+ * data.
+ */
+export function DataTable(props: DataTableProps) {
+  const { data, options = {} } = props;
   const [columns, setColumns] = useState<
     ColumnDef<TableFeatures, DynamicRow>[]
   >([]);
-  const [guids, setGuids] = useState<{ [k: string]: string }>(userGUIDs);
-
-  // EFFECT --- update guids if prop changes
-  // biome-ignore lint/correctness/useExhaustiveDependencies: we don't want a circular dependency on guids
-  useEffect(() => {
-    if (JSON.stringify(userGUIDs) !== JSON.stringify(guids)) {
-      setGuids(userGUIDs);
-    }
-  }, [userGUIDs]);
 
   // EFFECT --- recalculate column headers, if we need to.
   useEffect(() => {
@@ -86,17 +118,9 @@ export function SFLTable({
             return colDef;
           })
       : [];
-    // add "username" column
-    log.debug("adding username column");
-    columnDefs.splice(2, 0, {
-      accessorKey: "username",
-      header: formatHeader("username"),
-      cell: (info) => guids[info.row.getValue("GUID") as string],
-      id: "username",
-    } as ColumnDef<TableFeatures, DynamicRow>);
     log.debug(`setting columnDefs to '${JSON.stringify(columnDefs)}'`);
     setColumns(columnDefs);
-  }, [data.reduce, data.length, guids]);
+  }, [data]);
 
   // STATE --- sort column
   const [sorting, setSorting] = useState<SortingState>(
@@ -134,7 +158,7 @@ export function SFLTable({
   // const end = Math.min((pageIndex + 1) * PAGE_SIZE, users.length);
   // ---- <snip end> pagination ----
 
-    // MEMO --- memoize table layout
+  // MEMO --- memoize table layout
   const layout = useMemo(() => {
     return new TableLayout({
       columnWidths: columnWidths,
@@ -150,16 +174,15 @@ export function SFLTable({
     <Virtualizer
       layout={layout}
       layoutOptions={{
-        headingHeight: 56,
-        rowHeight: 56,
         columnWidths: columnWidths,
+        ...(options?.layoutOptions ?? {}),
       }}
     >
       <Table>
-        <Table.ScrollContainer>
+        {/* <Table.ScrollContainer> */}
           <Table.Content
-            aria-label="TanStack Table example"
-            className="min-w-150"
+            aria-label={options?.ariaLabel ?? "Data Table"}
+            className={options?.className ?? ""}
             sortDescriptor={sortDescriptor}
             onSortChange={(d) => setSorting(toSortingState(d))}
           >
@@ -205,7 +228,7 @@ export function SFLTable({
               ))}
             </Table.Body>
           </Table.Content>
-        </Table.ScrollContainer>
+        {/* </Table.ScrollContainer> */}
 
         {/* ----- <snip start> pagination ----- */}
         {/* <Table.Footer>
@@ -249,7 +272,7 @@ export function SFLTable({
       </Table>
     </Virtualizer>
   ) : (
-    <EmptyState className="flex h-full w-full flex-col items-center justify-center gap-4 text-center">
+    <EmptyState className="flex items-center content-center flex-col flex-1 w-screen gap-4 text-center">
       <Tray className="size-6 text-muted" />
       <span className="text-sm text-muted">No results found</span>
     </EmptyState>

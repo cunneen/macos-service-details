@@ -22,7 +22,7 @@ export const formatHeader = (i: unknown) => String(i);
  * @param sorting - The current TanStack sorting state.
  * @returns A `SortDescriptor` representing the first sort entry, or `undefined` if no sort is applied.
  */
-export const toSortDescriptor = (sorting: SortingState): SortDescriptor | undefined  => {
+export const toSortDescriptor = (sorting: SortingState): SortDescriptor | undefined => {
   const first = sorting[0];
 
   if (!first) return undefined;
@@ -38,7 +38,7 @@ export const toSortDescriptor = (sorting: SortingState): SortDescriptor | undefi
  * @param descriptor - The sort descriptor from HeroUI.
  * @returns A `SortingState` array with a single sort entry.
  */
-export const toSortingState = (descriptor: SortDescriptor): SortingState  => {
+export const toSortingState = (descriptor: SortDescriptor): SortingState => {
   return [
     {
       desc: descriptor.direction === "descending",
