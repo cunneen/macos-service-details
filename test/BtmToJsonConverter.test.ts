@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { Logger } from "tslog";
 import { describe, expect, it, test } from "vitest";
-import { BtmToJsonConverter, setLogger } from "../src/util/BtmToJsonConverter";
+import { BtmToJsonConverter, setLogger } from "../src/util/sflist/BtmToJsonConverter";
 
 const log = Logger.fromEnv({ name: "TEST: BtmParser" });
 setLogger(log);

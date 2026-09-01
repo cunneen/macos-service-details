@@ -1,5 +1,5 @@
 import * as logger from "@tauri-apps/plugin-log";
-import { isTauriRuntime } from "./isTauriRuntime";
+import { isTauriRuntime } from "../tauri/isTauriRuntime";
 
 export const getLoggerForCurrentRuntime = () => {
   // set the logger to tauri if available, otherwise console

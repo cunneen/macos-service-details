@@ -2,7 +2,7 @@
 import type { Key, SortDescriptor } from "@react-types/shared";
 import type { ColumnDef, SortingState, TableFeatures } from "@tanstack/react-table";
 import { CELL_PADDING_X, FONT_SIZE_MULTIPLIER } from "../config/config";
-import { getLoggerForCurrentRuntime } from "./getLoggerForCurrentRuntime";
+import { getLoggerForCurrentRuntime } from "./log/getLoggerForCurrentRuntime";
 
 const log = getLoggerForCurrentRuntime();
 

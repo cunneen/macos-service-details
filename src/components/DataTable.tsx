@@ -17,7 +17,7 @@ import {
 } from "@tanstack/react-table";
 import { useTanStackTableDevtools } from "@tanstack/react-table-devtools";
 import { useEffect, useMemo, useState } from "react";
-import { getLoggerForCurrentRuntime } from "./util/getLoggerForCurrentRuntime";
+import { getLoggerForCurrentRuntime } from "../util/log/getLoggerForCurrentRuntime";
 import {
   type DynamicRow,
   formatHeader,
@@ -25,7 +25,7 @@ import {
   sortDataByDescriptor,
   toSortDescriptor,
   toSortingState,
-} from "./util/tanstackTableUtils";
+} from "../util/tanstackTableUtils";
 
 const log = getLoggerForCurrentRuntime();
 

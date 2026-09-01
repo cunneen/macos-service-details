@@ -1,13 +1,13 @@
 import { Button } from "@heroui/react";
 import { Command } from "@tauri-apps/plugin-shell";
 import { useCallback, useState } from "react";
-import "./App.css";
-import { DataTable } from "./DataTable";
-import { mapBtmItems } from "./mapBtmItems";
-import { BtmToJsonConverter, setLogger } from "./util/BtmToJsonConverter";
+import { DataTable } from "./components/DataTable";
 import { flattenDeep } from "./util/flattenDeep";
-import { getLoggerForCurrentRuntime } from "./util/getLoggerForCurrentRuntime";
-import { isTauriRuntime } from "./util/isTauriRuntime";
+import { getLoggerForCurrentRuntime } from "./util/log/getLoggerForCurrentRuntime";
+import { BtmToJsonConverter, setLogger } from "./util/sflist/BtmToJsonConverter";
+import { mapBtmItems } from "./util/sflist/mapBtmItems";
+import { isTauriRuntime } from "./util/tauri/isTauriRuntime";
+import "./App.css";
 
 const log = getLoggerForCurrentRuntime();
 // set the logger on the BtmToJsonConverter
