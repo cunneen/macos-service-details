@@ -88,7 +88,7 @@ function App() {
         <h1 className={"text-2xl flex-1"}>{state}</h1>
         <div className={"flex flex-row"}>
           <Button isDisabled={!isTauri} onClick={dumpBtm} className={"m-4"}>
-            sfltool dumpbtm
+            SharedFileList Items
           </Button>
         </div>
       </div>
