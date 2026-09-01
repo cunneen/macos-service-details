@@ -1,12 +1,12 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: This should be a generic table as far as possible */
 "use client";
-import type { Key, SortDescriptor } from "@heroui/react";
-import { 
-  Table, 
-  // TableLayout, 
-  // Virtualizer 
-} from "@heroui/react";
-import type { ColumnDef, SortingState } from "@tanstack/react-table";
+import Tray from "@gravity-ui/icons/Tray";
+import { EmptyState, Table, TableLayout, Virtualizer } from "@heroui/react";
+import type {
+  ColumnDef,
+  SortingState,
+  TableFeatures,
+} from "@tanstack/react-table";
 import {
   createSortedRowModel,
   flexRender,
@@ -15,175 +15,162 @@ import {
   tableFeatures,
   useTable,
 } from "@tanstack/react-table";
+import { useTanStackTableDevtools } from "@tanstack/react-table-devtools";
 import { useEffect, useMemo, useState } from "react";
+import { getLoggerForCurrentRuntime } from "./util/getLoggerForCurrentRuntime";
+import {
+  type DynamicRow,
+  formatHeader,
+  getColumnWidths,
+  sortDataByDescriptor,
+  toSortDescriptor,
+  toSortingState,
+} from "./util/tanstackTableUtils";
 
-// 3. New in v9: declare which features this table uses (none yet)
+const log = getLoggerForCurrentRuntime();
+
+// declare which TanStack Table features this table uses
 const features = tableFeatures({
   rowSortingFeature, // enables sorting APIs and state
   sortedRowModel: createSortedRowModel(), // client-side sorting
   sortFns, // built-in sort functions
 });
 
-type DynamicRow = Record<string, unknown>;
-
-const formatHeader = (i: any) => i;
-
-// --- Sorting Bridge -------------------------------------------------------
-// Convert TanStack SortingState → React Aria SortDescriptor
-function toSortDescriptor(sorting: SortingState): SortDescriptor | undefined {
-  const first = sorting[0];
-
-  if (!first) return undefined;
-
-  return {
-    column: first.id,
-    direction: first.desc ? "descending" : "ascending",
-  };
-}
-
-// Convert React Aria SortDescriptor → TanStack SortingState
-function toSortingState(descriptor: SortDescriptor): SortingState {
-  return [
-    {
-      desc: descriptor.direction === "descending",
-      id: descriptor.column as string,
-    },
-  ];
-}
-
-const flattenDeep = (arr: any[]): any[] =>
-  Array.isArray(arr)
-    ? arr.reduce((a, b) => a.concat(flattenDeep(b)), [])
-    : [arr];
-
-const mapBtmItems = (arr: any[]) =>
-  arr.map((i: any) =>
-    i.items.map((ii: any) => ({ UID: i.UID, GUID: i.GUID, ...i.state, ...ii })),
-  );
-
 // --- Component ------------------------------------------------------------
 // const PAGE_SIZE = 4;
 
 export function SFLTable({
   data = [],
-  userIDs = {},
   userGUIDs = {},
 }: {
   data: any[];
-  userIDs: { [k: string]: string };
   userGUIDs: { [k: string]: string };
 }) {
   const [columns, setColumns] = useState<
-    ColumnDef<typeof features, DynamicRow>[]
+    ColumnDef<TableFeatures, DynamicRow>[]
   >([]);
-  const [flattenedData, setFlattenedData] = useState<any[]>([]);
+  const [guids, setGuids] = useState<{ [k: string]: string }>(userGUIDs);
 
+  // EFFECT --- update guids if prop changes
+  // biome-ignore lint/correctness/useExhaustiveDependencies: we don't want a circular dependency on guids
   useEffect(() => {
-    const flattened = flattenDeep(mapBtmItems(data));
-    setFlattenedData(flattened);
-  }, [data]);
+    if (JSON.stringify(userGUIDs) !== JSON.stringify(guids)) {
+      setGuids(userGUIDs);
+    }
+  }, [userGUIDs]);
 
+  // EFFECT --- recalculate column headers, if we need to.
   useEffect(() => {
     // dynamically obtain columns, if we have any data
-    const columnDefs: Array<ColumnDef<typeof features, DynamicRow>> =
-      flattenedData.length
-        ? flattenedData
-            .reduce((prev: any[], curr: any) => {
-              for (const key of Object.keys(curr)) {
-                if (!prev.includes(key)) {
-                  prev.push(key);
-                  return prev;
-                }
+    //   1. get a set of all keys
+    //   2. return a "ColumnDef" for each key
+    //   3. Add our custom column (username) "ColumnDef"
+    const columnDefs: ColumnDef<TableFeatures, DynamicRow>[] = data.length
+      ? data
+          .reduce((prev: any[], curr: any) => {
+            for (const key of Object.keys(curr)) {
+              if (!prev.includes(key)) {
+                prev.push(key);
+                return prev;
               }
-              return prev;
-            }, [])
-            .map((key) => {
-              const colDef: ColumnDef<typeof features, DynamicRow> = {
-                accessorKey: key,
-                header: formatHeader(key), // e.g. 'firstName' -> 'First Name'
-                cell: (info) => String(info.getValue() ?? ""), // values are unknown, so coerce for rendering
-                id: key,
-              };
-
-              if (
-                ["GUID", "UID"].includes(key) &&
-                Object.keys(userGUIDs)?.length &&
-                Object.keys(userIDs)?.length
-              ) {
-                switch (key) {
-                  case "UID":
-                    colDef.cell = (info) =>
-                      String(userIDs[info.getValue() as string]);
-                    break;
-                  case "GUID":
-                    colDef.cell = (info) =>
-                      String(userGUIDs[info.getValue() as string]);
-                    break;
-                }
-              }
-              return colDef;
-            })
-        : [];
+            }
+            return prev;
+          }, [])
+          .map((key) => {
+            const colDef: ColumnDef<TableFeatures, DynamicRow> = {
+              accessorKey: key,
+              header: formatHeader(key), // e.g. 'firstName' -> 'First Name'
+              cell: (info) => String(info.getValue() ?? ""), // values are unknown, so coerce for rendering
+              id: key,
+            };
+            return colDef;
+          })
+      : [];
+    // add "username" column
+    log.debug("adding username column");
+    columnDefs.splice(2, 0, {
+      accessorKey: "username",
+      header: formatHeader("username"),
+      cell: (info) => guids[info.row.getValue("GUID") as string],
+      id: "username",
+    } as ColumnDef<TableFeatures, DynamicRow>);
+    log.debug(`setting columnDefs to '${JSON.stringify(columnDefs)}'`);
     setColumns(columnDefs);
-  }, [flattenedData.reduce, flattenedData.length, userGUIDs, userIDs]);
+  }, [data.reduce, data.length, guids]);
 
-  const [sorting, setSorting] = useState<SortingState>([]);
-
+  // STATE --- sort column
+  const [sorting, setSorting] = useState<SortingState>(
+    toSortingState({ column: "UUID", direction: "ascending" }),
+  );
   const sortDescriptor = useMemo(() => toSortDescriptor(sorting), [sorting]);
 
+  // MEMO --- memoize sorting the data by this descriptor
   const sortedData = useMemo(() => {
-    return [...flattenedData].sort((a, b) => {
-      const col = sortDescriptor?.column as Key;
-      const first = String(a[col]);
-      const second = String(b[col]);
-      let cmp = first.localeCompare(second);
+    return sortDataByDescriptor(data, sortDescriptor);
+  }, [sortDescriptor, data]);
 
-      if (sortDescriptor?.direction === "descending") {
-        cmp *= -1;
-      }
-      return cmp;
-    });
-  }, [sortDescriptor, flattenedData]);
+  // MEMO --- memoize column widths
+  const columnWidths = useMemo(() => {
+    return getColumnWidths(data, columns);
+  }, [data, columns]);
 
-  // eslint-disable-next-line react-hooks/incompatible-library
+  // TABLE --- TanStack Table config
   const table = useTable({
-    key: "person-table", // registers this table with the devtools
-    features,
+    key: "sfl-table",
     columns,
+    features,
     data: sortedData,
   });
 
+  useTanStackTableDevtools(table);
+
+  // log.debug(`re-rendering table: data.length:${data.length}, flattenedData.length:${flattenedData.length}, sortedData.length:${sortedData.length}, sortDescriptor:'${JSON.stringify(sortDescriptor)}'`);
+
+  // ---- <snip start> pagination ----
   // const { pageIndex } = table.getState().pagination;
   // const pageCount = table.getPageCount();
   // const pages = Array.from({ length: pageCount }, (_, i) => i + 1);
   // const start = pageIndex * PAGE_SIZE + 1;
   // const end = Math.min((pageIndex + 1) * PAGE_SIZE, users.length);
+  // ---- <snip end> pagination ----
 
-  return (
-    // <Virtualizer
-    //   layout={TableLayout}
-    //   layoutOptions={
-    //     {
-    //       // headingHeight: 42,
-    //       // rowHeight: 42,
-    //     }
-    //   }
-    // >
-      <Table className={"my-4"}>
+    // MEMO --- memoize table layout
+  const layout = useMemo(() => {
+    return new TableLayout({
+      columnWidths: columnWidths,
+    });
+  }, [columnWidths]);
+
+  log.debug(
+    `columnWidths: ${JSON.stringify(Object.fromEntries(columnWidths.entries()), null, 2)}`,
+  );
+
+  // RENDER --- JSX
+  return columnWidths.size > 0 ? (
+    <Virtualizer
+      layout={layout}
+      layoutOptions={{
+        headingHeight: 56,
+        rowHeight: 56,
+        columnWidths: columnWidths,
+      }}
+    >
+      <Table>
         <Table.ScrollContainer>
-          {/* <Table.ResizableContainer> */}
           <Table.Content
             aria-label="TanStack Table example"
+            className="min-w-150"
             sortDescriptor={sortDescriptor}
             onSortChange={(d) => setSorting(toSortingState(d))}
           >
             <Table.Header>
-              {table.getHeaderGroups()[0]!.headers.map((header) => (
+              {(table.getHeaderGroups()?.[0] ?? []).headers.map((header) => (
                 <Table.Column
                   key={header.id}
                   allowsSorting={header.column.getCanSort()}
                   id={header.id}
                   isRowHeader={header.id === "name"}
+                  defaultWidth={columnWidths.get(header.id)}
                 >
                   {({ sortDirection }) => (
                     <Table.SortableColumnHeader sortDirection={sortDirection}>
@@ -191,13 +178,19 @@ export function SFLTable({
                         header.column.columnDef.header,
                         header.getContext(),
                       )}
-                      {/* <Table.ColumnResizer /> */}
                     </Table.SortableColumnHeader>
                   )}
                 </Table.Column>
               ))}
             </Table.Header>
-            <Table.Body>
+            <Table.Body
+              renderEmptyState={() => (
+                <EmptyState className="flex h-full w-full flex-col items-center justify-center gap-4 text-center">
+                  <Tray className="size-6 text-muted" />
+                  <span className="text-sm text-muted">No results found</span>
+                </EmptyState>
+              )}
+            >
               {table.getRowModel().rows.map((row) => (
                 <Table.Row key={row.id} id={row.id}>
                   {row.getAllCells().map((cell) => (
@@ -212,10 +205,11 @@ export function SFLTable({
               ))}
             </Table.Body>
           </Table.Content>
-          {/* </Table.ResizableContainer> */}
         </Table.ScrollContainer>
-        <Table.Footer>
-          {/* <Pagination size="sm">
+
+        {/* ----- <snip start> pagination ----- */}
+        {/* <Table.Footer>
+        <Pagination size="sm">
           <Pagination.Summary>
             {start} to {end} of {users.length} results
           </Pagination.Summary>
@@ -249,9 +243,15 @@ export function SFLTable({
               </Pagination.Next>
             </Pagination.Item>
           </Pagination.Content>
-        </Pagination> */}
-        </Table.Footer>
+        </Pagination>
+      </Table.Footer> */}
+        {/* ----- <snip end> pagination ----- */}
       </Table>
-    // </Virtualizer>
+    </Virtualizer>
+  ) : (
+    <EmptyState className="flex h-full w-full flex-col items-center justify-center gap-4 text-center">
+      <Tray className="size-6 text-muted" />
+      <span className="text-sm text-muted">No results found</span>
+    </EmptyState>
   );
 }

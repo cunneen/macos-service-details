@@ -1,6 +1,6 @@
 import { Button } from "@heroui/react";
 import { Command } from "@tauri-apps/plugin-shell";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import "./App.css";
 import { SFLTable } from "./SFLTable";
 import { BtmToJsonConverter, setLogger } from "./util/BtmToJsonConverter";
@@ -13,11 +13,32 @@ setLogger(log);
 
 const isTauri = isTauriRuntime();
 
+// flatten each object within an array of objects
+const flattenDeep = (arr: any[]): any[] =>
+  Array.isArray(arr)
+    ? arr.reduce((a, b) => a.concat(flattenDeep(b)), [])
+    : [arr];
+
+// map output of dumpbtmp
+const mapBtmItems = (arr: any[]) =>
+  arr.map((i: any) =>
+    i.items.map((ii: any) => ({ UID: i.UID, GUID: i.GUID, ...i.state, ...ii })),
+  );
+
+// ===== main application
 function App() {
   const [_dumpBtmRaw, setDumpBtmRaw] = useState("");
-  const [_dumpBtmParsed, setDumpBtmParsed] = useState<object | undefined>();
-  const [userIDs, setUserIDs] = useState<{[k: string]: string}>({});
-  const [userGUIDs, setUserGUIDs] = useState<{[k: string]: string}>({});
+  const [dumpBtmParsed, setDumpBtmParsed] = useState<
+    | {
+        [key: string]: unknown;
+      }[]
+    | undefined
+  >();
+  const [flattenedData, setFlattenedData] = useState<{ [k: string]: string }[]>(
+    [],
+  );
+  const [userIDs, setUserIDs] = useState<{ [k: string]: string }>({});
+  const [userGUIDs, setUserGUIDs] = useState<{ [k: string]: string }>({});
   const [state, setState] = useState("Run Commands");
 
   const dumpBtm = useCallback(async () => {
@@ -43,6 +64,13 @@ function App() {
     }
   }, []);
 
+  useEffect(() => {
+    if (dumpBtmParsed) {
+      const flattened = flattenDeep(mapBtmItems(dumpBtmParsed));
+      setFlattenedData(flattened);
+    }
+  }, [dumpBtmParsed]);
+
   const getUserIDs = useCallback(async () => {
     // setState("Getting User IDs...");
     const userIDsResult = await Command.create("getUserIDs", [
@@ -67,7 +95,7 @@ function App() {
           .split("\n")
           .map((i) => i.trim())
           .map((i) => i.split(/\s+/))
-          .map(([k,v]) => ([v,k]))
+          .map(([k, v]) => [v, k]),
       );
 
       log.debug(`userGUIDs: ${JSON.stringify(userGUIDsMap)}`);
@@ -77,11 +105,10 @@ function App() {
           .split("\n")
           .map((i) => i.trim())
           .map((i) => i.split(/\s+/))
-          .map(([k,v]) => ([v,k]))
-          ,
+          .map(([k, v]) => [v, k]),
       );
 
-      log.debug(`userIDs: ${JSON.stringify(userIDsMap)}`)
+      log.debug(`userIDs: ${JSON.stringify(userIDsMap)}`);
       setUserGUIDs(userGUIDsMap);
       setUserIDs(userIDsMap);
       // setState("Success!");
@@ -89,7 +116,6 @@ function App() {
       setState("Error!");
     }
   }, []);
-
 
   return (
     <main
@@ -105,7 +131,6 @@ function App() {
         <Button isDisabled={!isTauri} onClick={getUserIDs} className={"m-4"}>
           get user IDs
         </Button>
-
       </div>
 
       {/* <div>User IDs:</div>
@@ -120,8 +145,12 @@ function App() {
           </li>
         ),
       )} */}
-      {/** biome-ignore lint/suspicious/noExplicitAny: we want SFLTable to be widely applicable to different data types if possible */}
-      {state === "Success!" && <SFLTable data={_dumpBtmParsed as any[]} userGUIDs={userGUIDs} userIDs={userIDs} />}
+
+      <SFLTable
+        // biome-ignore lint/suspicious/noExplicitAny: we want SFLTable to be widely applicable to different data types if possible
+        data={flattenedData as any[]}
+        userGUIDs={userGUIDs}
+      />
     </main>
   );
 }

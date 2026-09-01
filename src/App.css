@@ -1,2 +1,12 @@
 @import "tailwindcss";
 @import "@heroui/styles";
+
+/* TanStack / HeroUI Tables : stop cells from being truncated */
+div.table__content {
+  overflow-x: scroll;
+  font-family: monospace;
+}
+
+/* td.table__cell, div.table__cell {
+  text-wrap-mode: nowrap;
+} */
