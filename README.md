@@ -63,7 +63,10 @@
 
 ## About The Project
 
-<a href="./public/2026-08-28_screenshot.jpg" title="full screenshot"><img src="./public/2026-08-28_screenshot.jpg"  height="auto" width="250" alt="screenshot" /></a>
+<a href="./public/2026-09-01_screenshot.jpg" title="full screenshot #1"><img src="./public/2026-09-01_screenshot.jpg"  height="auto" width="250" alt="screenshot #1" /></a>
+<a href="./public/2026-09-01_screenshot2.jpg" title="full screenshot #2"><img src="./public/2026-09-01_screenshot2.jpg"  height="auto" width="250" alt="screenshot #2" /></a>
+<a href="./public/2026-09-01_screenshot3.jpg" title="full screenshot #3"><img src="./public/2026-09-01_screenshot3.jpg"  height="auto" width="250" alt="screenshot #3" /></a>
+<a href="./public/2026-09-01_screenshot4.jpg" title="full screenshot #4"><img src="./public/2026-09-01_screenshot4.jpg"  height="auto" width="250" alt="screenshot #4" /></a>
 
 A GUI to explore MacOS processes and their configuration; largely a front-end for the built-in MacOS
 `sfltool`.
